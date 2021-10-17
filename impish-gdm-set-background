@@ -1,0 +1,157 @@
+#!/bin/bash
+
+codename=$(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2)
+osname=$(cat /etc/os-release | grep '="Ubuntu"' | cut -d = -f 2)
+
+if [ "$codename" == "impish" ] && [ "$osname" == '"Ubuntu"' ]
+
+then
+source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+else
+echo "
+----------------------------------------
+Sorry, Script is only for Ubuntu 21.10
+Exiting...
+----------------------------------------"
+exit 1
+fi
+
+pkg=$(dpkg -l | grep libglib2.0-dev >/dev/null && echo "yes" || echo "no")
+if [ "$pkg" == "no" ]
+then
+echo "
+-----------------------------------------------------------------------------------------------------
+Sorry, the package 'libglib2.0-dev' is not installed. Install the package and then run this Script.
+For now, Exiting...
+-----------------------------------------------------------------------------------------------------"
+exit 1
+fi
+
+############################################################################################
+case "$1" in ###############################################################################
+############################################################################################
+--help) ####################################################################################
+############################################################################################
+echo "Use the options /absolute/Image/path or valid 'HEXColorCode' like below
+		example 1: sudo ./impish-gdm-set-background /home/admin/mybg.jpg
+		example 2: sudo ./impish-gdm-set-background \#245678"
+exit 1
+;;
+############################################################################################
+--reset) ###################################################################################
+############################################################################################
+
+if ! [ -f /usr/local/share/gnome-shell/theme/impish-gdm/impish-gdm-theme.gresource ]
+then
+echo "
+-----------------------------------------------------------------------------
+No need, Already Reset. (or unlikely background is not set using this Script.)
+-----------------------------------------------------------------------------"
+exit 1
+elif [ "$UID" != "0" ]
+then
+echo "This Script must be run with sudo"
+exit 1
+else
+rm /usr/local/share/gnome-shell/theme/impish-gdm/impish-gdm-theme.gresource
+update-alternatives --quiet --set gdm-theme.gresource "$source"
+cd /usr/local/share
+rmdir --ignore-fail-on-non-empty -p gnome-shell/theme/impish-gdm
+echo "
+				     		---------------
+						|Reset Success|
+						---------------
+				Changes will be effective after a Reboot"
+exit 1
+fi
+;;
+esac
+
+if [ -z "$1" ]
+then
+echo "Use the options /absolute/Image/path or valid HEXColorCode like below
+		example 1: sudo ./impish-gdm-set-background /home/admin/mybg.jpg
+		example 2: sudo ./impish-gdm-set-background \#245678"
+exit 1
+fi
+
+if [ "$UID" != "0" ]
+then
+echo "This Script must be run with sudo"
+exit 1
+fi
+
+cd /tmp
+if [ -f /tmp/theme/impish-gdm-theme.gresource.xml ]
+then rm /tmp/theme/impish-gdm-theme.gresource.xml
+fi
+
+if ! [ -f "$1" ] && ! [[ $1 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]
+then
+echo "provided option '$1' is niether valid /absolute/Image/path nor valid 'HEX Color Code'
+Exiting without any changes.."
+exit 1
+fi
+
+if [ -f "$1" ]
+then
+color='#042320'
+img="'file://$1'"
+else
+color=$1
+fi
+
+prefix="/org/gnome/shell/theme"
+dest="/usr/local/share/gnome-shell/theme/impish-gdm"
+
+install -d $dest
+
+for r in $(gresource list $source); do
+    t="${r/#\/org\/gnome\/shell\/}"
+    mkdir -p $(dirname $t)
+    gresource extract $source $r >$t
+done
+
+extractedFiles=$(find "theme" -type f -printf "%P\n" | xargs -i echo "    <file>{}</file>")
+
+cat <<EOF >"theme/impish-gdm-theme.gresource.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/shell/theme">
+$extractedFiles
+  </gresource>
+</gresources>
+EOF
+
+(
+  cd "theme"
+  mv gdm.css original.css
+  echo '@import url("resource:///org/gnome/shell/theme/original.css");
+  #lockDialogGroup {
+  background: '$color' url('$img');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center; }' > gdm.css
+  glib-compile-resources impish-gdm-theme.gresource.xml
+)
+
+mv theme/impish-gdm-theme.gresource $dest
+
+cd $dest
+update-alternatives --quiet --install /usr/share/gnome-shell/gdm-theme.gresource gdm-theme.gresource $dest/impish-gdm-theme.gresource 0
+update-alternatives --quiet --set gdm-theme.gresource $dest/impish-gdm-theme.gresource
+
+check=$(update-alternatives --query gdm-theme.gresource | grep Value | grep $dest/impish-gdm-theme.gresource >/dev/null && echo "pass" || echo "fail")
+if [ "$check" == "pass" ]
+then
+echo "
+				     		---------
+						|Success|
+						---------
+				  Changes will be effective after a Reboot"
+else
+echo Failure
+exit 1
+fi
+
+exit
