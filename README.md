@@ -3,7 +3,9 @@
 This Script is only for Ubuntu 21.10 (Code Name: Impish) to change the gdm background to any color or with Image.
 
 1. Download the script with the below command
+2. ````
 wget -qO - https://github.com/PRATAP-KUMAR/impish-gdm-set-background/archive/main.tar.gz | tar zx --strip-components=1 impish-gdm-set-background-main/impish-gdm-set-background
+````
 
 2. run the below command to set the color  
 ````
