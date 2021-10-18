@@ -7,7 +7,7 @@ This Script is only for Ubuntu 21.10 (Code Name: Impish) to change the gdm backg
 wget -qO - https://github.com/PRATAP-KUMAR/impish-gdm-set-background/archive/main.tar.gz | tar zx --strip-components=1 impish-gdm-set-background-main/impish-gdm-set-background
 ````
 
-2. run the below command to set the color  
+2. run the below command to set the color  (Replace #000000 with any valid HEX Color Code)
 ````
 sudo ./impish-gdm-set-background \#000000
 ````
