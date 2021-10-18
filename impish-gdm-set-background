@@ -27,21 +27,113 @@ For now, Exiting...
 exit 1
 fi
 
+dest="/usr/local/share/gnome-shell/theme/impish-gdm"
+color='#211014'
+
+###################################################
+HELP() {
+
+echo "
+
+impish-gdm-set-background script (for changing Ubuntu 21.10 GDM Background) HELP
+
+there are four options
+1. background with image
+2. background with color
+3. background with gradient horizontal ( requires two valid hex color inputs)
+4. background with gradient vertical ( requires two valid hex color inputs)
+
+tip: be ready with valid hex color code in place of below example like #aAbBcC or #dDeEfF. Change them to your preffered hex color codes.
+you may choose colors from https://www.color-hex.com/
+
+Example Commands:
+
+1. sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg
+2. sudo ./impish-gdm-set-background --plain-color \#aAbBcC
+3. sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF
+4. sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF
+5. sudo ./impish-gdm-set-background --reset
+6. ./impish-gdm-set-background --help
+"
+
+}
+###################################################
+
+###################################################
+ROUTINE_CHECK() {
+if [ "$UID" != "0" ]
+then
+echo "This Script must be run with sudo"
+exit 1
+fi
+
+cd /tmp
+if [ -d /tmp/theme/ ]
+then rm -r /tmp/theme
+fi
+}
+###################################################
+
+###################################################
+EXTRACT() {
+for r in $(gresource list $source); do
+    t="${r/#\/org\/gnome\/shell\/}"
+    mkdir -p $(dirname $t)
+    gresource extract $source $r >$t
+done
+}
+###################################################
+
+###################################################
+CREATE_XML() {
+extractedFiles=$(find "theme" -type f -printf "%P\n" | xargs -i echo "    <file>{}</file>")
+cat <<EOF >"theme/impish-gdm-theme.gresource.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/shell/theme">
+$extractedFiles
+  </gresource>
+</gresources>
+EOF
+}
+###################################################
+
+###################################################
+SET_GRESOURCE() {
+cd $dest
+update-alternatives --quiet --install /usr/share/gnome-shell/gdm-theme.gresource gdm-theme.gresource $dest/impish-gdm-theme.gresource 0
+update-alternatives --quiet --set gdm-theme.gresource $dest/impish-gdm-theme.gresource
+
+check=$(update-alternatives --query gdm-theme.gresource | grep Value | grep $dest/impish-gdm-theme.gresource >/dev/null && echo "pass" || echo "fail")
+if [ "$check" == "pass" ]
+then
+echo "
+seems 'background change is successful'
+Changes will be effective after a Reboot (CTRL+ALT+F1 may show the changes immediately)
+If something wrong, logon to tty and run the below command
+sudo update-alternatives --quiet --set gdm-theme.gresource /usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource
+"
+else
+echo Failure
+exit 1
+fi
+}
+###################################################
+
 ############################################################################################
 case "$1" in ###############################################################################
 ############################################################################################
 --help) ####################################################################################
 ############################################################################################
-echo "Use the options /absolute/Image/path or valid 'HEXColorCode' like below
-		example 1: sudo ./impish-gdm-set-background /home/admin/mybg.jpg
-		example 2: sudo ./impish-gdm-set-background \#245678"
+HELP
 exit 1
 ;;
+############################################################################################
 ############################################################################################
 --reset) ###################################################################################
 ############################################################################################
 
-if ! [ -f /usr/local/share/gnome-shell/theme/impish-gdm/impish-gdm-theme.gresource ]
+if ! [ -f $dest/impish-gdm-theme.gresource ]
 then
 echo "
 -----------------------------------------------------------------------------
@@ -65,93 +157,133 @@ echo "
 exit 1
 fi
 ;;
-esac
+############################################################################################
+--image) ###################################################################################
+############################################################################################
 
-if [ -z "$1" ]
+if [ -z "$2" ]
 then
-echo "Use the options /absolute/Image/path or valid HEXColorCode like below
-		example 1: sudo ./impish-gdm-set-background /home/admin/mybg.jpg
-		example 2: sudo ./impish-gdm-set-background \#245678"
+echo "Image path is not provided"
 exit 1
 fi
 
-if [ "$UID" != "0" ]
+if
+file "$2" | grep -qE 'image|bitmap'
 then
-echo "This Script must be run with sudo"
-exit 1
-fi
 
+ROUTINE_CHECK
+EXTRACT
+cd theme
+cp "$2" ./gdm-background
+mv gdm.css original.css
+echo '@import url("resource:///org/gnome/shell/theme/original.css");
+#lockDialogGroup {
+background: '$color' url("resource:///org/gnome/shell/theme/gdm-background");
+background-repeat: no-repeat;
+background-size: cover;
+background-position: center; }' > gdm.css
 cd /tmp
-if [ -f /tmp/theme/impish-gdm-theme.gresource.xml ]
-then rm /tmp/theme/impish-gdm-theme.gresource.xml
-fi
+CREATE_XML
+cd theme
+glib-compile-resources impish-gdm-theme.gresource.xml
+mv impish-gdm-theme.gresource $dest
 
-if ! [ -f "$1" ] && ! [[ $1 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]
-then
-echo "provided option '$1' is niether valid /absolute/Image/path nor valid 'HEX Color Code'
-Exiting without any changes.."
+SET_GRESOURCE
+
 exit 1
-fi
 
-if [ -f "$1" ]
-then
-color='#042320'
-img="'file://$1'"
 else
-color=$1
-fi
-
-prefix="/org/gnome/shell/theme"
-dest="/usr/local/share/gnome-shell/theme/impish-gdm"
-
-install -d $dest
-
-for r in $(gresource list $source); do
-    t="${r/#\/org\/gnome\/shell\/}"
-    mkdir -p $(dirname $t)
-    gresource extract $source $r >$t
-done
-
-extractedFiles=$(find "theme" -type f -printf "%P\n" | xargs -i echo "    <file>{}</file>")
-
-cat <<EOF >"theme/impish-gdm-theme.gresource.xml"
-<?xml version="1.0" encoding="UTF-8"?>
-<gresources>
-  <gresource prefix="/org/gnome/shell/theme">
-$extractedFiles
-  </gresource>
-</gresources>
-EOF
-
-(
-  cd "theme"
-  mv gdm.css original.css
-  echo '@import url("resource:///org/gnome/shell/theme/original.css");
-  #lockDialogGroup {
-  background: '$color' url('$img');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center; }' > gdm.css
-  glib-compile-resources impish-gdm-theme.gresource.xml
-)
-
-mv theme/impish-gdm-theme.gresource $dest
-
-cd $dest
-update-alternatives --quiet --install /usr/share/gnome-shell/gdm-theme.gresource gdm-theme.gresource $dest/impish-gdm-theme.gresource 0
-update-alternatives --quiet --set gdm-theme.gresource $dest/impish-gdm-theme.gresource
-
-check=$(update-alternatives --query gdm-theme.gresource | grep Value | grep $dest/impish-gdm-theme.gresource >/dev/null && echo "pass" || echo "fail")
-if [ "$check" == "pass" ]
-then
 echo "
-				     		---------
-						|Success|
-						---------
-				  Changes will be effective after a Reboot"
-else
-echo Failure
+absolute path to image is neither provided nor it is valid.
+see help with below command
+./impish-gdm-set-background --help"
 exit 1
 fi
+;;
+############################################################################################
+--plain-color) #############################################################################
+############################################################################################
+
+if [ -z "$2" ]
+then
+echo "color is not provided"
+exit 1
+fi
+
+if ! [[ $2 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]
+then
+echo "provided color is not a valid 'HEX Color Code'
+see help with below command
+./impish-gdm-set-background --help"
+exit 1
+fi
+
+ROUTINE_CHECK
+
+EXTRACT
+cd theme
+mv gdm.css original.css
+echo '@import url("resource:///org/gnome/shell/theme/original.css");
+#lockDialogGroup {
+background-color: '$2'; }' > gdm.css
+cd /tmp
+CREATE_XML
+cd theme
+glib-compile-resources impish-gdm-theme.gresource.xml
+mv impish-gdm-theme.gresource $dest
+
+SET_GRESOURCE
+
+exit 1
+;;
+############################################################################################
+--gradient) ################################################################################
+############################################################################################
+
+if [ "$2" == "horizontal" ] || [ "$2" == "vertical" ]
+then
+direction=$2
+else
+echo "gradient direction is not provided"
+HELP
+exit 1
+fi
+
+if [[ -z "$3" || -z "$4" ]]
+then
+echo "color/colors are not provided"
+exit 1
+fi
+
+if ! [[ $3 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]] || ! [[ $4 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]
+then
+echo "provided color/colors is/are not a valid 'HEX Color Code'
+see help with below command
+./impish-gdm-set-background --help"
+exit 1
+fi	
+
+ROUTINE_CHECK
+
+EXTRACT
+cd theme
+mv gdm.css original.css
+echo '@import url("resource:///org/gnome/shell/theme/original.css");
+#lockDialogGroup {
+background-gradient-direction: '$direction';
+background-gradient-start: '$3';
+background-gradient-end: '$4'; }' > gdm.css
+cd /tmp
+CREATE_XML
+cd theme
+glib-compile-resources impish-gdm-theme.gresource.xml
+mv impish-gdm-theme.gresource $dest
+
+SET_GRESOURCE
+
+exit 1
+;;
+############################################################################################
+esac
 
 exit
