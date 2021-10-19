@@ -71,6 +71,12 @@ cd /tmp
 if [ -d /tmp/theme/ ]
 then rm -r /tmp/theme
 fi
+
+if ! [ -d $dest ]
+then
+install -d $dest
+fi
+
 }
 ###################################################
 
