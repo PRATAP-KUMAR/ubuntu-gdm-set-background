@@ -20,7 +20,7 @@ you may choose colors from https://www.color-hex.com/
 Example Commands:
 
 1. `sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg`
-2. `sudo ./impish-gdm-set-background --plain-color \#aAbBcC`
+2. `sudo ./impish-gdm-set-background --color \#aAbBcC`
 3. `sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
 4. `sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
 5. `sudo ./impish-gdm-set-background --reset`
