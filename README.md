@@ -1,4 +1,4 @@
-#impish-gdm-set-background script (for changing Ubuntu 21.10 GDM Background) HELP
+# impish-gdm-set-background script (for changing Ubuntu 21.10 GDM Background) HELP
 
 there are four options
 1. background with image
