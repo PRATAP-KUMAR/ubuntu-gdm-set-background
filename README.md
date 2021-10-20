@@ -1,4 +1,4 @@
-impish-gdm-set-background script (for changing Ubuntu 21.10 GDM Background) HELP
+#impish-gdm-set-background script (for changing Ubuntu 21.10 GDM Background) HELP
 
 there are four options
 1. background with image
@@ -11,19 +11,19 @@ you may choose colors from https://www.color-hex.com/
 
 Example Commands:
 
-1. sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg
-2. sudo ./impish-gdm-set-background --color \#aAbBcC
-3. sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF
-4. sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF
-5. sudo ./impish-gdm-set-background --reset
-6. ./impish-gdm-set-background --help
+1. `sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg`
+2. `sudo ./impish-gdm-set-background --color \#aAbBcC`
+3. `sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
+4. `sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
+5. `sudo ./impish-gdm-set-background --reset`
+6. `./impish-gdm-set-background --help`
 
 RESCUE_MODE, Example Commands:
 
-1. sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg rescue
-2. sudo ./impish-gdm-set-background --color \#aAbBcC rescue
-3. sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue
-4. sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue
+1. `sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg rescue`
+2. `sudo ./impish-gdm-set-background --color \#aAbBcC rescue`
+3. `sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue`
+4. `sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
 
 Why RESCUE_MODE?
 It is when you try to change the background with some other scripts and then interacted with this script,
