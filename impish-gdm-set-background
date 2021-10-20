@@ -54,6 +54,20 @@ Example Commands:
 4. sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF
 5. sudo ./impish-gdm-set-background --reset
 6. ./impish-gdm-set-background --help
+
+RESCUE_MODE, Example Commands:
+
+1. sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg rescue
+2. sudo ./impish-gdm-set-background --color \#aAbBcC rescue
+3. sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue
+4. sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue
+
+Why RESCUE_MODE?
+It is when you try to change the background with some other scripts and then interacted with this script,
+there will be some conflicts. In case you ran other scripts to change the background and then tried this script,
+found conflicts? then add 'rescue' to the end of the command as mentiond above.
+
+Please note that for 'RESCUE_MODE' active internet connection is necessary
 "
 
 }
@@ -77,6 +91,23 @@ then
 install -d $dest
 fi
 
+}
+###################################################
+
+###################################################
+RESCUE_MODE() {
+echo "
+>>>>> Trying to Reinstall the package yaru-theme-gnome-shell,
+if the reinstallation of the package is succesful, background change will be done
+otherwise No changes will be made <<<<<<<<<
+"
+apt install --reinstall yaru-theme-gnome-shell
+if [ $? != 0 ]
+then
+echo "
+SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE".
+exit 1
+fi
 }
 ###################################################
 
@@ -135,7 +166,6 @@ HELP
 exit 1
 ;;
 ############################################################################################
-############################################################################################
 --reset) ###################################################################################
 ############################################################################################
 
@@ -178,6 +208,12 @@ file "$2" | grep -qE 'image|bitmap'
 then
 
 ROUTINE_CHECK
+
+if [ "$3" == "rescue" ]
+then
+RESCUE_MODE
+fi
+
 EXTRACT
 cd theme
 cp "$2" ./gdm-background
@@ -226,7 +262,13 @@ fi
 
 ROUTINE_CHECK
 
+if [ "$3" == 'rescue' ]
+then
+RESCUE_MODE
+fi
+
 EXTRACT
+
 cd theme
 mv gdm.css original.css
 echo '@import url("resource:///org/gnome/shell/theme/original.css");
@@ -251,7 +293,6 @@ then
 direction=$2
 else
 echo "gradient direction is not provided"
-HELP
 exit 1
 fi
 
@@ -271,6 +312,11 @@ fi
 
 ROUTINE_CHECK
 
+if [ "$5" == "rescue" ]
+then
+RESCUE_MODE
+fi
+
 EXTRACT
 cd theme
 mv gdm.css original.css
@@ -287,6 +333,12 @@ mv impish-gdm-theme.gresource $dest
 
 SET_GRESOURCE
 
+exit 1
+;;
+############################################################################################
+*) #########################################################################################
+############################################################################################
+echo " use the options --image | --color | --gradient | --help | --reset"
 exit 1
 ;;
 ############################################################################################
