@@ -1,10 +1,10 @@
-# impish-gdm-set-background script (for changing Ubuntu 21.10 GDM Background) HELP
+# ubuntu-gdm-set-background script (for changing Ubuntu 20.04, 21.04 & 21.10 GDM Background) HELP
 
 Download the script with below command
 
 
 ````
-wget -qO - https://github.com/PRATAP-KUMAR/impish-gdm-set-background/archive/main.tar.gz | tar zx --strip-components=1 impish-gdm-set-background-main/impish-gdm-set-background
+wget -qO - https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background/archive/main.tar.gz | tar zx --strip-components=1 ubuntu-gdm-set-background-main/ubuntu-gdm-set-background
 ````
 
 there are four options
@@ -18,19 +18,19 @@ you may choose colors from https://www.color-hex.com/
 
 Example Commands:
 
-1. `sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg`
-2. `sudo ./impish-gdm-set-background --color \#aAbBcC`
-3. `sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
-4. `sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
-5. `sudo ./impish-gdm-set-background --reset`
-6. `./impish-gdm-set-background --help`
+1. `sudo ./ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg`
+2. `sudo ./ubuntu-gdm-set-background --color \#aAbBcC`
+3. `sudo ./ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
+4. `sudo ./ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
+5. `sudo ./ubuntu-gdm-set-background --reset`
+6. `./ubuntu-gdm-set-background --help`
 
 RESCUE_MODE, Example Commands:
 
-1. `sudo ./impish-gdm-set-background --image /home/user/backgrounds/image.jpg rescue`
-2. `sudo ./impish-gdm-set-background --color \#aAbBcC rescue`
-3. `sudo ./impish-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue`
-4. `sudo ./impish-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
+1. `sudo ./ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg rescue`
+2. `sudo ./ubuntu-gdm-set-background --color \#aAbBcC rescue`
+3. `sudo ./ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue`
+4. `sudo ./ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
 
 Why RESCUE_MODE?
 It is when you try to change the background with some other scripts and then interacted with this script,
