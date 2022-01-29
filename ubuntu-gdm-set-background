@@ -8,7 +8,7 @@ then
 source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
 GDM_RESOURCE_CONFIG_NAME="gdm3"
 
-elif [ "$codename" == "impish" ] && [ "$osname" == '"Ubuntu"' ]
+elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] && [ "$osname" == '"Ubuntu"' ]
 then
 source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
 GDM_RESOURCE_CONFIG_NAME="gdm"
@@ -16,7 +16,7 @@ GDM_RESOURCE_CONFIG_NAME="gdm"
 else
 echo "
 ------------------------------------------------------------------
-Sorry, Script is only for Ubuntu 20.04, Ubuntu 21.04 & 21.10 Only
+Sorry, Script is only for Ubuntu 20.04, Ubuntu 21.04, 21.10 & 22.04 Only
 Exiting...
 ------------------------------------------------------------------"
 exit 1
