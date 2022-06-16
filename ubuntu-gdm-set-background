@@ -12,6 +12,7 @@ RCol='\e[0m';
 
 codename=$(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2)
 osname=$(cat /etc/os-release | grep '="Ubuntu"' | cut -d = -f 2)
+osname_pop=$(cat /etc/os-release | grep '="Pop!_OS"' | cut -d = -f 2)
 
 if [ "$codename" == "focal" ]  || [ "$codename" == "hirsute" ] && [ "$osname" == '"Ubuntu"' ]; then
   source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
@@ -20,11 +21,15 @@ if [ "$codename" == "focal" ]  || [ "$codename" == "hirsute" ] && [ "$osname" ==
 elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] && [ "$osname" == '"Ubuntu"' ]; then
   source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
   GDM_RESOURCE_CONFIG_NAME="gdm"
+  
+elif [ "$codename" == "jammy" ] && [ "$osname_pop" == '"Pop!_OS"' ]; then
+  source="/usr/share/gnome-shell/theme/Pop/gnome-shell-theme.gresource"
+  GDM_RESOURCE_CONFIG_NAME="gdm"
 
 else
   echo -e "${Red}
 ------------------------------------------------------------------
-Sorry, Script is only for Ubuntu ${BWhi}20.04, 21.04, 21.10 & 22.04${Red} Only
+Sorry, Script is only for Ubuntu ${BWhi}20.04, 21.04, 21.10 , 22.04 and for Pop!_OS 22.04${Red} Only
 Exiting...
 ------------------------------------------------------------------
 ${RCol}"
