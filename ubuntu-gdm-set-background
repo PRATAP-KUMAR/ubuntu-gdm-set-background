@@ -16,13 +16,13 @@ osname=$(cat /etc/os-release | grep '="Ubuntu"' | cut -d = -f 2)
 if [ "$codename" == "focal" ]  || [ "$codename" == "hirsute" ] && [ "$osname" == '"Ubuntu"' ]; then
   GDM_RESOURCE_CONFIG_NAME="gdm3"
 
-elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] && [ "$osname" == '"Ubuntu"' ]; then
+elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] && [ "$osname" == '"Ubuntu"' ]; then
   GDM_RESOURCE_CONFIG_NAME="gdm"
 
 else
   echo -e "${Red}
 ------------------------------------------------------------------
-Sorry, Script is only for Ubuntu ${BWhi}20.04, 21.04, 21.10 & 22.04${Red} Only
+Sorry, Script is only for Ubuntu ${BWhi}20.04, 21.04, 21.10, 22.04 & 22.10${Red} Only
 Exiting...
 ------------------------------------------------------------------
 ${RCol}"
