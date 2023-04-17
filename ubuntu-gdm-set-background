@@ -86,6 +86,7 @@ ${BRed}Please note that for 'RESCUE_MODE' active internet connection is necessar
 ###################################################
 
 ###################################################
+# cd /tmp
 ROUTINE_CHECK() {
   if [ "$UID" != "0" ]; then
     echo -e "${BRed}This script must be run with sudo${RCol}"
@@ -145,6 +146,7 @@ EOF
 ###################################################
 
 ###################################################
+# cd $dest
 SET_GRESOURCE() {
   cd $dest
   update-alternatives --quiet --install /usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource 0
@@ -171,7 +173,7 @@ case "$1" in
   exit 1
   ;;
 --reset)
-  ROUTINE_CHECK
+  ROUTINE_CHECK # cd /tmp
   if ! [ -f $dest/custom-gdm-background.gresource ]; then
     echo -e "
 -----------------------------------------------------------------------------
@@ -202,12 +204,12 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
   if
     file "$2" | grep -qE 'image|bitmap'
   then
-    ROUTINE_CHECK
+    ROUTINE_CHECK # cd /tmp
     if [ "$3" == "rescue" ]; then
       RESCUE_MODE
     fi
     EXTRACT
-    cd theme
+    cd /tmp/theme
     cp "$2" ./gdm-background
     mv $GDM_RESOURCE_CONFIG_NAME.css original.css
     echo '@import url("resource:///org/gnome/shell/theme/original.css");
@@ -218,11 +220,11 @@ background-size: cover;
 background-position: center; }' >$GDM_RESOURCE_CONFIG_NAME.css
     cd /tmp
     CREATE_XML
-    cd theme
+    cd /tmp/theme
     glib-compile-resources custom-gdm-background.gresource.xml
     mv custom-gdm-background.gresource $dest
 
-    SET_GRESOURCE
+    SET_GRESOURCE # cd $dest
 
     exit 1
 
@@ -247,20 +249,20 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
     exit 1
   fi
 
-  ROUTINE_CHECK
+  ROUTINE_CHECK # cd /tmp
   if [ "$3" == 'rescue' ]; then
     RESCUE_MODE
   fi
 
   EXTRACT
-  cd theme
+  cd /tmp/theme
   mv $GDM_RESOURCE_CONFIG_NAME.css original.css
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
 background-color: '"$2"'; }' >$GDM_RESOURCE_CONFIG_NAME.css
   cd /tmp
   CREATE_XML
-  cd theme
+  cd /tmp/theme
   glib-compile-resources custom-gdm-background.gresource.xml
   mv custom-gdm-background.gresource $dest
 
@@ -290,14 +292,14 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
     exit 1
   fi
 
-  ROUTINE_CHECK
+  ROUTINE_CHECK # cd /tmp
 
   if [ "$5" == "rescue" ]; then
     RESCUE_MODE
   fi
 
   EXTRACT
-  cd theme
+  cd /tmp/theme
   mv $GDM_RESOURCE_CONFIG_NAME.css original.css
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
@@ -306,7 +308,7 @@ background-gradient-start: '"$3"';
 background-gradient-end: '"$4"'; }' >$GDM_RESOURCE_CONFIG_NAME.css
   cd /tmp
   CREATE_XML
-  cd theme
+  cd /tmp/theme
   glib-compile-resources custom-gdm-background.gresource.xml
   mv custom-gdm-background.gresource $dest
 
