@@ -164,7 +164,7 @@ ${BWhi}$ sudo update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.
 case "$1" in
 --help)
   HELP
-  exit 1
+  exit 0
   ;;
 --reset)
   ROUTINE_CHECK
@@ -173,7 +173,7 @@ case "$1" in
 -----------------------------------------------------------------------------
 No need, Already Reset. ${Red}(or unlikely background is not set using this Script.)${RCol}
 -----------------------------------------------------------------------------"
-    exit 1
+    exit 0
   elif [ "$UID" != "0" ]; then
     echo -e "${BRed}This Script must be run with sudo${RCol}"
     exit 1
@@ -187,7 +187,7 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
 		  		|Reset Success|
 		  		---------------
 		  		Changes will be effective after a Reboot ${RCol}"
-    exit 1
+    exit 0
   fi
   ;;
 --image)
@@ -219,7 +219,7 @@ background-position: center; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
 
     SET_GRESOURCE
 
-    exit 1
+    exit 0
 
   else
     echo -e "${BRed}
@@ -260,7 +260,7 @@ background-color: '"$2"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
 
   SET_GRESOURCE
 
-  exit 1
+  exit 0
   ;;
 --gradient)
   if [ "$2" == "horizontal" ] || [ "$2" == "vertical" ]; then
@@ -303,7 +303,7 @@ background-gradient-end: '"$4"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.c
 
   SET_GRESOURCE
 
-  exit 1
+  exit 0
   ;;
 *)
   echo -e "Use the options ${BWhi}--image |--color | --gradient | --help | --reset${RCol}"
