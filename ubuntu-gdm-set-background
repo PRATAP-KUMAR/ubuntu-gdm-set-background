@@ -10,8 +10,8 @@ BBlu='\e[1;34m'
 BWhi='\e[1;37m'
 RCol='\e[0m'
 
-codename=$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)
-osname=$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)
+codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
+osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
 if [ "$codename" == "focal" ] || [ "$codename" == "hirsute" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
   GDM_RESOURCE_CONFIG_NAME="gdm3"
@@ -42,7 +42,8 @@ fi
 source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
 dest="/usr/local/share/gnome-shell/custom-gdm"
 color='#456789'
-
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
 ###################################################
 HELP() {
 
@@ -92,12 +93,8 @@ ROUTINE_CHECK() {
     exit 1
   fi
 
-  if [ -d /tmp/theme/ ]; then
-    rm -r /tmp/theme
-  fi
-
-  if ! [ -d $dest ]; then
-    install -d $dest
+  if ! [ -d "$dest" ]; then
+    install -d "$dest"
   fi
 
 }
@@ -123,17 +120,17 @@ SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE.${RCol}"
 EXTRACT() {
   for r in $(gresource list $source); do
     t="${r/#\/org\/gnome\/shell\//}"
-    mkdir -p -- "$(dirname -- "/tmp/$t")"
-    # *should* only be /tmp/theme, but should make a tempdir for this
-    gresource extract $source "$r" >"/tmp/$t"
+    mkdir -p -- "$(dirname -- "$tmp_dir/$t")"
+    # *should* only be $tmp_dir/theme, but should make a tempdir for this
+    gresource extract "$source" "$r" >"$tmp_dir/$t"
   done
 }
 ###################################################
 
 ###################################################
 CREATE_XML() {
-  extractedFiles=$(find "/tmp/theme" -type f -printf "    <file>%P</file>\n")
-  cat <<EOF >"/tmp/theme/custom-gdm-background.gresource.xml"
+  extractedFiles="$(find "$tmp_dir/theme" -type f -printf "    <file>%P</file>\n")"
+  cat <<EOF >"$tmp_dir/theme/custom-gdm-background.gresource.xml"
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/shell/theme">
@@ -146,10 +143,10 @@ EOF
 
 ###################################################
 SET_GRESOURCE() {
-  update-alternatives --quiet --install /usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource 0
-  update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource
+  update-alternatives --quiet --install "/usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$dest/custom-gdm-background.gresource" 0
+  update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$dest/custom-gdm-background.gresource"
 
-  if update-alternatives --query $GDM_RESOURCE_CONFIG_NAME-theme.gresource | grep -q "Value: $dest/custom-gdm-background.gresource"; then
+  if update-alternatives --query "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" | grep -q "Value: $dest/custom-gdm-background.gresource"; then
     echo -e "
 \xf0\x9f\x98\x80\x00 ${BGre}Seems 'background change is successful'${RCol}
 Changes will be effective after a Reboot (${BWhi}CTRL+ALT+F1${RCol} may show the changes immediately)
@@ -171,7 +168,7 @@ case "$1" in
   ;;
 --reset)
   ROUTINE_CHECK
-  if ! [ -f $dest/custom-gdm-background.gresource ]; then
+  if ! [ -f "$dest/custom-gdm-background.gresource" ]; then
     echo -e "
 -----------------------------------------------------------------------------
 No need, Already Reset. ${Red}(or unlikely background is not set using this Script.)${RCol}
@@ -181,8 +178,8 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
     echo -e "${BRed}This Script must be run with sudo${RCol}"
     exit 1
   else
-    rm $dest/custom-gdm-background.gresource
-    update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.gresource "$source"
+    rm "$dest/custom-gdm-background.gresource"
+    update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$source"
     #! Run in subshell so outside pwd not changed
     (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
     echo -e "${Gre}
@@ -208,17 +205,17 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
     fi
     EXTRACT
 
-    cp "$image_path" /tmp/theme/gdm-background
-    mv /tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css /tmp/theme/original.css
+    cp "$image_path" "$tmp_dir/theme/gdm-background"
+    mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
     echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
-background: '$color' url("resource:///org/gnome/shell/theme/gdm-background");
+background: '"$color"' url("resource:///org/gnome/shell/theme/gdm-background");
 background-repeat: no-repeat;
 background-size: cover;
-background-position: center; }' >/tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css
+background-position: center; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
     CREATE_XML
-    glib-compile-resources --sourcedir /tmp/theme /tmp/theme/custom-gdm-background.gresource.xml
-    mv /tmp/theme/custom-gdm-background.gresource $dest
+    glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
+    mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
 
     SET_GRESOURCE
 
@@ -238,7 +235,7 @@ $ ./ubuntu-gdm-set-background --help${RCol}"
       Use ${BWhi}\$ sudo ./ubuntu-gdm-set-background --color #aee02a${RCol} to set ${BWhi}#aee02a${RCol} as the background color.${RCol}"
     exit 1
   fi
-  if ! [[ $2 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
+  if ! [[ "$2" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
     echo -e "${BRed}Provided color is not a valid 'HEX Color Code'${RCol}
 See help with below command
 ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
@@ -252,14 +249,14 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
 
   EXTRACT
 
-  mv /tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css /tmp/theme/original.css
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
-background-color: '"$2"'; }' >/tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css
+background-color: '"$2"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
 
-  glib-compile-resources --sourcedir /tmp/theme /tmp/theme/custom-gdm-background.gresource.xml
-  mv /tmp/theme/custom-gdm-background.gresource $dest
+  glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
+  mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
 
   SET_GRESOURCE
 
@@ -267,7 +264,7 @@ background-color: '"$2"'; }' >/tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css
   ;;
 --gradient)
   if [ "$2" == "horizontal" ] || [ "$2" == "vertical" ]; then
-    direction=$2
+    direction="$2"
   else
     echo -e "${BRed}Gradient direction is not provided.${RCol}
     Use ${BWhi}$ sudo ./ubuntu-gdm-set-background --gradient horizontal \#aa03af \#afa0ee${RCol} OR
@@ -280,7 +277,7 @@ background-color: '"$2"'; }' >/tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css
     exit 1
   fi
 
-  if ! [[ $3 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]] || ! [[ $4 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
+  if ! [[ "$3" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]] || ! [[ "$4" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
     echo -e "${BRed}Provided color/colors is/are not a valid 'HEX Color Code'${RCol}.
 See help with below command
 ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
@@ -294,15 +291,15 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
   fi
 
   EXTRACT
-  mv /tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css /tmp/theme/original.css
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
 background-gradient-direction: '"$direction"';
 background-gradient-start: '"$3"';
-background-gradient-end: '"$4"'; }' >/tmp/theme/$GDM_RESOURCE_CONFIG_NAME.css
+background-gradient-end: '"$4"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
-  glib-compile-resources --sourcedir /tmp/theme /tmp/theme/custom-gdm-background.gresource.xml
-  mv /tmp/theme/custom-gdm-background.gresource $dest
+  glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
+  mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
 
   SET_GRESOURCE
 
