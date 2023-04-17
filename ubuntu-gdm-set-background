@@ -86,14 +86,12 @@ ${BRed}Please note that for 'RESCUE_MODE' active internet connection is necessar
 ###################################################
 
 ###################################################
-# cd /tmp
 ROUTINE_CHECK() {
   if [ "$UID" != "0" ]; then
     echo -e "${BRed}This script must be run with sudo${RCol}"
     exit 1
   fi
 
-  cd /tmp
   if [ -d /tmp/theme/ ]; then
     rm -r /tmp/theme
   fi
@@ -146,9 +144,7 @@ EOF
 ###################################################
 
 ###################################################
-# cd $dest
 SET_GRESOURCE() {
-  cd $dest
   update-alternatives --quiet --install /usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource 0
   update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource
 
@@ -173,7 +169,8 @@ case "$1" in
   exit 1
   ;;
 --reset)
-  ROUTINE_CHECK # cd /tmp
+  ROUTINE_CHECK
+  cd /tmp
   if ! [ -f $dest/custom-gdm-background.gresource ]; then
     echo -e "
 -----------------------------------------------------------------------------
@@ -204,7 +201,8 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
   if
     file "$2" | grep -qE 'image|bitmap'
   then
-    ROUTINE_CHECK # cd /tmp
+    ROUTINE_CHECK
+    cd /tmp
     if [ "$3" == "rescue" ]; then
       RESCUE_MODE
     fi
@@ -224,7 +222,7 @@ background-position: center; }' >$GDM_RESOURCE_CONFIG_NAME.css
     glib-compile-resources custom-gdm-background.gresource.xml
     mv custom-gdm-background.gresource $dest
 
-    SET_GRESOURCE # cd $dest
+    SET_GRESOURCE
 
     exit 1
 
@@ -249,7 +247,8 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
     exit 1
   fi
 
-  ROUTINE_CHECK # cd /tmp
+  ROUTINE_CHECK
+  cd /tmp
   if [ "$3" == 'rescue' ]; then
     RESCUE_MODE
   fi
@@ -292,7 +291,8 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
     exit 1
   fi
 
-  ROUTINE_CHECK # cd /tmp
+  ROUTINE_CHECK
+  cd /tmp
 
   if [ "$5" == "rescue" ]; then
     RESCUE_MODE
