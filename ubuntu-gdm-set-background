@@ -10,13 +10,13 @@ BBlu='\e[1;34m'
 BWhi='\e[1;37m'
 RCol='\e[0m'
 
-codename=$(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2)
-osname=$(cat /etc/os-release | grep '="Ubuntu"' | cut -d = -f 2)
+codename=$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)
+osname=$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)
 
-if [ "$codename" == "focal" ] || [ "$codename" == "hirsute" ] && [ "$osname" == '"Ubuntu"' ]; then
+if [ "$codename" == "focal" ] || [ "$codename" == "hirsute" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
   GDM_RESOURCE_CONFIG_NAME="gdm3"
 
-elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] && [ "$osname" == '"Ubuntu"' ]; then
+elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
   GDM_RESOURCE_CONFIG_NAME="gdm"
 
 else
@@ -29,8 +29,7 @@ ${RCol}"
   exit 1
 fi
 
-pkg=$(dpkg -l | grep libglib2.0-dev-bin >/dev/null && echo "yes" || echo "no")
-if [ "$pkg" == "no" ]; then
+if dpkg -l | grep -q libglib2.0-dev-bin; then
   echo -e "${Red}
 -----------------------------------------------------------------------------------------------------
 Sorry, the package ${BWhi}'libglib2.0-dev-bin'${Red} is not installed. 
@@ -112,8 +111,8 @@ RESCUE_MODE() {
 if the reinstallation of the package is succesful, background change will be done
 otherwise No changes will be made <<<<<<<<<
 "
-  apt install --reinstall yaru-theme-gnome-shell
-  if [ $? != 0 ]; then
+
+  if ! apt install --reinstall yaru-theme-gnome-shell; then
     echo -e "${BIRed}
 SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE.${RCol}"
     exit 1
@@ -125,15 +124,15 @@ SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE.${RCol}"
 EXTRACT() {
   for r in $(gresource list $source); do
     t="${r/#\/org\/gnome\/shell\//}"
-    mkdir -p $(dirname $t)
-    gresource extract $source $r >$t
+    mkdir -p -- "$(dirname -- "$t")"
+    gresource extract $source "$r" >"$t"
   done
 }
 ###################################################
 
 ###################################################
 CREATE_XML() {
-  extractedFiles=$(find "theme" -type f -printf "%P\n" | xargs -i echo "    <file>{}</file>")
+  extractedFiles=$(find "theme" -type f -printf "%P\n" | xargs -I {} echo "    <file>{}</file>")
   cat <<EOF >"theme/custom-gdm-background.gresource.xml"
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
@@ -151,8 +150,7 @@ SET_GRESOURCE() {
   update-alternatives --quiet --install /usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource 0
   update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource
 
-  check=$(update-alternatives --query $GDM_RESOURCE_CONFIG_NAME-theme.gresource | grep Value | grep $dest/custom-gdm-background.gresource >/dev/null && echo "pass" || echo "fail")
-  if [ "$check" == "pass" ]; then
+  if update-alternatives --query $GDM_RESOURCE_CONFIG_NAME-theme.gresource | grep -q "Value: $dest/custom-gdm-background.gresource"; then
     echo -e "
 \xf0\x9f\x98\x80\x00 ${BGre}Seems 'background change is successful'${RCol}
 Changes will be effective after a Reboot (${BWhi}CTRL+ALT+F1${RCol} may show the changes immediately)
@@ -259,7 +257,7 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
   mv $GDM_RESOURCE_CONFIG_NAME.css original.css
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
-background-color: '$2'; }' >$GDM_RESOURCE_CONFIG_NAME.css
+background-color: '"$2"'; }' >$GDM_RESOURCE_CONFIG_NAME.css
   cd /tmp
   CREATE_XML
   cd theme
@@ -303,9 +301,9 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
   mv $GDM_RESOURCE_CONFIG_NAME.css original.css
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
-background-gradient-direction: '$direction';
-background-gradient-start: '$3';
-background-gradient-end: '$4'; }' >$GDM_RESOURCE_CONFIG_NAME.css
+background-gradient-direction: '"$direction"';
+background-gradient-start: '"$3"';
+background-gradient-end: '"$4"'; }' >$GDM_RESOURCE_CONFIG_NAME.css
   cd /tmp
   CREATE_XML
   cd theme
@@ -321,4 +319,3 @@ background-gradient-end: '$4'; }' >$GDM_RESOURCE_CONFIG_NAME.css
   exit 1
   ;;
 esac
-exit
