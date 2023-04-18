@@ -1,22 +1,22 @@
 #!/bin/bash
 
 # Colors
-Red='\e[0;31m';     
-BRed='\e[1;31m'; 
-BIRed='\e[1;91m';
-Gre='\e[0;32m';     
-BGre='\e[1;32m';
-BBlu='\e[1;34m';
-BWhi='\e[1;37m';
-RCol='\e[0m';
+Red='\e[0;31m'
+BRed='\e[1;31m'
+BIRed='\e[1;91m'
+Gre='\e[0;32m'
+BGre='\e[1;32m'
+BBlu='\e[1;34m'
+BWhi='\e[1;37m'
+RCol='\e[0m'
 
-codename=$(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2)
-osname=$(cat /etc/os-release | grep '="Ubuntu"' | cut -d = -f 2)
+codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
+osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
-if [ "$codename" == "focal" ]  || [ "$codename" == "hirsute" ] && [ "$osname" == '"Ubuntu"' ]; then
+if [ "$codename" == "focal" ] || [ "$codename" == "hirsute" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
   GDM_RESOURCE_CONFIG_NAME="gdm3"
 
-elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] && [ "$osname" == '"Ubuntu"' ]; then
+elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
   GDM_RESOURCE_CONFIG_NAME="gdm"
 
 else
@@ -29,8 +29,7 @@ ${RCol}"
   exit 1
 fi
 
-pkg=$(dpkg -l | grep libglib2.0-dev-bin >/dev/null && echo "yes" || echo "no")
-if [ "$pkg" == "no" ]; then
+if ! dpkg -l | grep -q libglib2.0-dev-bin; then
   echo -e "${Red}
 -----------------------------------------------------------------------------------------------------
 Sorry, the package ${BWhi}'libglib2.0-dev-bin'${Red} is not installed. 
@@ -43,7 +42,8 @@ fi
 source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
 dest="/usr/local/share/gnome-shell/custom-gdm"
 color='#456789'
-
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
 ###################################################
 HELP() {
 
@@ -93,13 +93,8 @@ ROUTINE_CHECK() {
     exit 1
   fi
 
-  cd /tmp
-  if [ -d /tmp/theme/ ]; then
-    rm -r /tmp/theme
-  fi
-
-  if ! [ -d $dest ]; then
-    install -d $dest
+  if ! [ -d "$dest" ]; then
+    install -d "$dest"
   fi
 
 }
@@ -112,8 +107,8 @@ RESCUE_MODE() {
 if the reinstallation of the package is succesful, background change will be done
 otherwise No changes will be made <<<<<<<<<
 "
-  apt install --reinstall yaru-theme-gnome-shell
-  if [ $? != 0 ]; then
+
+  if ! apt install --reinstall yaru-theme-gnome-shell; then
     echo -e "${BIRed}
 SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE.${RCol}"
     exit 1
@@ -125,16 +120,17 @@ SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE.${RCol}"
 EXTRACT() {
   for r in $(gresource list $source); do
     t="${r/#\/org\/gnome\/shell\//}"
-    mkdir -p $(dirname $t)
-    gresource extract $source $r >$t
+    mkdir -p -- "$(dirname -- "$tmp_dir/$t")"
+    # *should* only be $tmp_dir/theme, but should make a tempdir for this
+    gresource extract "$source" "$r" >"$tmp_dir/$t"
   done
 }
 ###################################################
 
 ###################################################
 CREATE_XML() {
-  extractedFiles=$(find "theme" -type f -printf "%P\n" | xargs -i echo "    <file>{}</file>")
-  cat <<EOF >"theme/custom-gdm-background.gresource.xml"
+  extractedFiles="$(find "$tmp_dir/theme" -type f -printf "    <file>%P</file>\n")"
+  cat <<EOF >"$tmp_dir/theme/custom-gdm-background.gresource.xml"
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/shell/theme">
@@ -147,12 +143,10 @@ EOF
 
 ###################################################
 SET_GRESOURCE() {
-  cd $dest
-  update-alternatives --quiet --install /usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource 0
-  update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.gresource $dest/custom-gdm-background.gresource
+  update-alternatives --quiet --install "/usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$dest/custom-gdm-background.gresource" 0
+  update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$dest/custom-gdm-background.gresource"
 
-  check=$(update-alternatives --query $GDM_RESOURCE_CONFIG_NAME-theme.gresource | grep Value | grep $dest/custom-gdm-background.gresource >/dev/null && echo "pass" || echo "fail")
-  if [ "$check" == "pass" ]; then
+  if update-alternatives --query "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" | grep -q "Value: $dest/custom-gdm-background.gresource"; then
     echo -e "
 \xf0\x9f\x98\x80\x00 ${BGre}Seems 'background change is successful'${RCol}
 Changes will be effective after a Reboot (${BWhi}CTRL+ALT+F1${RCol} may show the changes immediately)
@@ -167,66 +161,65 @@ ${BWhi}$ sudo update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.
 ###################################################
 
 ############################################################################################
-case "$1" in 
-  --help)
-    HELP
-    exit 1
+case "$1" in
+--help)
+  HELP
+  exit 0
   ;;
-  --reset)
-    ROUTINE_CHECK
-    if ! [ -f $dest/custom-gdm-background.gresource ]; then
-      echo -e "
+--reset)
+  ROUTINE_CHECK
+  if ! [ -f "$dest/custom-gdm-background.gresource" ]; then
+    echo -e "
 -----------------------------------------------------------------------------
 No need, Already Reset. ${Red}(or unlikely background is not set using this Script.)${RCol}
 -----------------------------------------------------------------------------"
-      exit 1
-    elif [ "$UID" != "0" ]; then
-      echo -e "${BRed}This Script must be run with sudo${RCol}"
-      exit 1
-    else
-      rm $dest/custom-gdm-background.gresource
-      update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.gresource "$source"
-      cd /usr/local/share
-      rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm
-      echo -e "${Gre}
+    exit 0
+  elif [ "$UID" != "0" ]; then
+    echo -e "${BRed}This Script must be run with sudo${RCol}"
+    exit 1
+  else
+    rm "$dest/custom-gdm-background.gresource"
+    update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$source"
+    #! Run in subshell so outside pwd not changed
+    (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
+    echo -e "${Gre}
       		---------------
 		  		|Reset Success|
 		  		---------------
 		  		Changes will be effective after a Reboot ${RCol}"
-      exit 1
-    fi
+    exit 0
+  fi
   ;;
-  --image)
-    if [ -z "$2" ]; then
-      echo -e "${BRed}Image path is not provided${RCol}"
-      exit 1
-    fi
-    if
-      file "$2" | grep -qE 'image|bitmap'
-    then
-      ROUTINE_CHECK
+--image)
+  if [ -z "$2" ]; then
+    echo -e "${BRed}Image path is not provided${RCol}"
+    exit 1
+  fi
+
+  if
+    image_path="$(realpath -- "$2")" && file "$image_path" | grep -qE 'image|bitmap'
+  then
+    ROUTINE_CHECK
     if [ "$3" == "rescue" ]; then
       RESCUE_MODE
     fi
     EXTRACT
-    cd theme
-    cp "$2" ./gdm-background
-    mv $GDM_RESOURCE_CONFIG_NAME.css original.css
+
+    cp "$image_path" "$tmp_dir/theme/gdm-background"
+    mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
     echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
-background: '$color' url("resource:///org/gnome/shell/theme/gdm-background");
+background: '"$color"' url("resource:///org/gnome/shell/theme/gdm-background");
 background-repeat: no-repeat;
 background-size: cover;
-background-position: center; }' >$GDM_RESOURCE_CONFIG_NAME.css
-    cd /tmp
+background-position: center; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
     CREATE_XML
-    cd theme
-    glib-compile-resources custom-gdm-background.gresource.xml
-    mv custom-gdm-background.gresource $dest
+    glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
+    mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
 
     SET_GRESOURCE
 
-    exit 1
+    exit 0
 
   else
     echo -e "${BRed}
@@ -236,18 +229,18 @@ $ ./ubuntu-gdm-set-background --help${RCol}"
     exit 1
   fi
   ;;
-  --color)
-    if [ -z "$2" ]; then
-      echo -e "${Red}Color is not provided.
+--color)
+  if [ -z "$2" ]; then
+    echo -e "${Red}Color is not provided.
       Use ${BWhi}\$ sudo ./ubuntu-gdm-set-background --color #aee02a${RCol} to set ${BWhi}#aee02a${RCol} as the background color.${RCol}"
-      exit 1
-    fi
-    if ! [[ $2 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
-      echo -e "${BRed}Provided color is not a valid 'HEX Color Code'${RCol}
+    exit 1
+  fi
+  if ! [[ "$2" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
+    echo -e "${BRed}Provided color is not a valid 'HEX Color Code'${RCol}
 See help with below command
 ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
-      exit 1
-    fi
+    exit 1
+  fi
 
   ROUTINE_CHECK
   if [ "$3" == 'rescue' ]; then
@@ -255,24 +248,23 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
   fi
 
   EXTRACT
-  cd theme
-  mv $GDM_RESOURCE_CONFIG_NAME.css original.css
+
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
-background-color: '$2'; }' >$GDM_RESOURCE_CONFIG_NAME.css
-  cd /tmp
+background-color: '"$2"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
-  cd theme
-  glib-compile-resources custom-gdm-background.gresource.xml
-  mv custom-gdm-background.gresource $dest
+
+  glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
+  mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
 
   SET_GRESOURCE
 
-  exit 1
+  exit 0
   ;;
-  --gradient)
+--gradient)
   if [ "$2" == "horizontal" ] || [ "$2" == "vertical" ]; then
-    direction=$2
+    direction="$2"
   else
     echo -e "${BRed}Gradient direction is not provided.${RCol}
     Use ${BWhi}$ sudo ./ubuntu-gdm-set-background --gradient horizontal \#aa03af \#afa0ee${RCol} OR
@@ -285,7 +277,7 @@ background-color: '$2'; }' >$GDM_RESOURCE_CONFIG_NAME.css
     exit 1
   fi
 
-  if ! [[ $3 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]] || ! [[ $4 =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
+  if ! [[ "$3" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]] || ! [[ "$4" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
     echo -e "${BRed}Provided color/colors is/are not a valid 'HEX Color Code'${RCol}.
 See help with below command
 ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
@@ -299,26 +291,22 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
   fi
 
   EXTRACT
-  cd theme
-  mv $GDM_RESOURCE_CONFIG_NAME.css original.css
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
 #lockDialogGroup {
-background-gradient-direction: '$direction';
-background-gradient-start: '$3';
-background-gradient-end: '$4'; }' >$GDM_RESOURCE_CONFIG_NAME.css
-  cd /tmp
+background-gradient-direction: '"$direction"';
+background-gradient-start: '"$3"';
+background-gradient-end: '"$4"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
-  cd theme
-  glib-compile-resources custom-gdm-background.gresource.xml
-  mv custom-gdm-background.gresource $dest
+  glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
+  mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
 
   SET_GRESOURCE
 
+  exit 0
+  ;;
+*)
+  echo -e "Use the options ${BWhi}--image |--color | --gradient | --help | --reset${RCol}"
   exit 1
   ;;
-  *) 
-    echo -e "Use the options ${BWhi}--image |--color | --gradient | --help | --reset${RCol}"
-    exit 1
-  ;;
 esac
-exit
