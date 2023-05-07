@@ -1,0 +1,190 @@
+#!/usr/bin/env bash
+
+codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
+osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
+
+if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
+  echo -e "
+--------------------------------------------------------------
+Sorry, Script is only for Ubuntu 23.04
+Exiting...
+--------------------------------------------------------------"
+  exit 1
+fi
+
+if ! dpkg -l | grep -q libglib2.0-dev-bin; then
+  echo -e "
+-----------------------------------------------------------------------------------------------------
+Sorry, the package 'libglib2.0-dev-bin' is not installed. 
+Run sudo apt-get install libglib2.0-dev-bin to install.
+For now, Exiting...
+-----------------------------------------------------------------------------------------------------"
+  exit 1
+fi
+
+source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+dest="/usr/local/share/gnome-shell/custom-gdm"
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
+
+###################################################
+HELP() {
+
+  echo -e "
+ubuntu-gdm-set-background-23.04-transparent script (for making Ubuntu 23.04 login-background color transparent so that the background set
+via gsettings set com.ubuntu.login-screen background-picture-uri is visible) HELP
+
+Example Commands:
+1. sudo ./ubuntu-gdm-set-background-23.04-transparent --set
+2. ./ubuntu-gdm-set-background-23.04-transparent --help
+
+RESCUE_MODE, Example Commands:
+
+1. sudo ./ubuntu-gdm-set-background-23.04-transparent --set --rescue
+
+Why RESCUE_MODE?
+It is when you try to change the background with some other scripts and then interacted with this script,
+there will be some conflicts. In case you ran other scripts to change the background and then tried this script,
+found conflicts? then add 'rescue' to the end of the command as mentiond above.
+
+Please note that for 'RESCUE_MODE' active internet connection is necessary
+"
+}
+###################################################
+
+###################################################
+ROUTINE_CHECK() {
+  if [ "$UID" != "0" ]; then
+    echo -e "This script must be run with sudo"
+    exit 1
+  fi
+
+  if ! [ -d "$dest" ]; then
+    install -d "$dest"
+  fi
+
+}
+###################################################
+
+###################################################
+RESCUE_MODE() {
+  echo -e "
+>>>>> Trying to reinstall the package yaru-theme-gnome-shell,
+if the reinstallation of the package is succesful, background change will be done
+otherwise No changes will be made <<<<<<<<<
+"
+
+  if ! apt install --reinstall yaru-theme-gnome-shell; then
+    echo -e "
+SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE."
+    exit 1
+  fi
+}
+###################################################
+
+###################################################
+EXTRACT() {
+  for r in $(gresource list $source); do
+    t="${r/#\/org\/gnome\/shell\//}"
+    mkdir -p -- "$(dirname -- "$tmp_dir/$t")"
+    # *should* only be $tmp_dir/theme, but should make a tempdir for this
+    gresource extract "$source" "$r" >"$tmp_dir/$t"
+  done
+}
+###################################################
+
+###################################################
+CREATE_XML() {
+  extractedFiles="$(find "$tmp_dir/theme" -type f -printf "    <file>%P</file>\n")"
+  cat <<EOF >"$tmp_dir/theme/custom-gdm-background.gresource.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/shell/theme">
+$extractedFiles
+  </gresource>
+</gresources>
+EOF
+}
+###################################################
+
+###################################################
+SET_GRESOURCE() {
+  update-alternatives --quiet --install /usr/share/gnome-shell/gdm-theme.gresource gdm-theme.gresource $dest/custom-gdm-background.gresource 0
+  update-alternatives --quiet --set gdm-theme.gresource $dest/custom-gdm-background.gresource
+
+  if update-alternatives --query gdm-theme.gresource | grep -q "Value: $dest/custom-gdm-background.gresource"; then
+    echo -e "
+\xf0\x9f\x98\x80\x00 'login-dialog background is made transparent succesfully'
+Changes will be effective after a Reboot (CTRL+ALT+F1 may show the changes immediately)
+If something went wrong, log on to tty and run the below command
+sudo update-alternatives --quiet --set gdm-theme.gresource $source
+"
+  else
+    echo Failure
+    exit 1
+  fi
+}
+###################################################
+
+############################################################################################
+case "$1" in
+
+--help)
+  HELP
+  exit 0
+  ;;
+--reset)
+  ROUTINE_CHECK
+  if ! [ -f $dest/custom-gdm-background.gresource ]; then
+    echo -e "
+-----------------------------------------------------------------------------
+No need, Already Reset. (or unlikely background is not set using this Script.)
+-----------------------------------------------------------------------------"
+    exit 0
+  elif [ "$UID" != "0" ]; then
+    echo -e "This Script must be run with sudo$"
+    exit 1
+  else
+    rm $dest/custom-gdm-background.gresource
+    update-alternatives --quiet --set gdm-theme.gresource $source
+    (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
+    echo -e "
+      				---------------
+		  		|Reset Success|
+		  		---------------
+		  		Changes will be effective after a Reboot"
+    exit 0
+  fi
+  ;;
+
+--set)
+  ROUTINE_CHECK
+  if [ "$2" == "--rescue" ]; then
+    RESCUE_MODE
+  fi
+  EXTRACT
+  mv "$tmp_dir/theme/gdm.css" "$tmp_dir/theme/original.css"
+  echo '
+@import url("resource:///org/gnome/shell/theme/original.css");
+.login-dialog {
+background-color: transparent;
+}
+' >"$tmp_dir/theme/gdm.css"
+
+  CREATE_XML
+
+  glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
+
+  mv "$tmp_dir/theme/custom-gdm-background.gresource" $dest
+
+  SET_GRESOURCE
+
+  exit 0
+  ;;
+
+*)
+
+  echo -e "Use the options --set | --help | --reset"
+  exit 1
+  ;;
+esac
