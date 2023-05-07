@@ -139,9 +139,9 @@ EOF
 ###################################################
 SET_GRESOURCE() {
   update-alternatives --quiet --install "/usr/share/gnome-shell/gdm-theme.gresource" "gdm-theme.gresource" "$dest/custom-gdm-background.gresource" 0
-  update-alternatives --quiet --set "gdm-theme.gresource" "$dest/custom-gdm-background.gresource"
+  update-alternatives --quiet --set gdm-theme.gresource "$dest/custom-gdm-background.gresource"
 
-  if update-alternatives --query "gdm-theme.gresource" | grep -q "Value: $dest/custom-gdm-background.gresource"; then
+  if update-alternatives --query gdm-theme.gresource | grep -q "Value: $dest/custom-gdm-background.gresource"; then
     echo -e "
 \xf0\x9f\x98\x80\x00 ${BGre}'background change is successful'${RCol}
 Changes will be effective after a Reboot (${BWhi}CTRL+ALT+F1${RCol} may show the changes immediately)
@@ -174,7 +174,7 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
     exit 1
   else
     rm "$dest/custom-gdm-background.gresource"
-    update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$source"
+    update-alternatives --quiet --set gdm-theme.gresource "$source"
     #! Run in subshell so outside pwd not changed
     (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
     echo -e "${Gre}
