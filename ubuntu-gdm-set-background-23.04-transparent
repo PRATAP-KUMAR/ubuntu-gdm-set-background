@@ -1,32 +1,5 @@
 #!/usr/bin/env bash
 
-codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
-osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
-
-if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
-  echo -e "
---------------------------------------------------------------
-Sorry, Script is only for Ubuntu 23.04
-Exiting...
---------------------------------------------------------------"
-  exit 1
-fi
-
-if ! dpkg -l | grep -q libglib2.0-dev-bin; then
-  echo -e "
------------------------------------------------------------------------------------------------------
-Sorry, the package 'libglib2.0-dev-bin' is not installed. 
-Run sudo apt-get install libglib2.0-dev-bin to install.
-For now, Exiting...
------------------------------------------------------------------------------------------------------"
-  exit 1
-fi
-
-source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
-dest="/usr/local/share/gnome-shell/custom-gdm"
-tmp_dir="$(mktemp -d)"
-trap 'rm -rf "$tmp_dir"' EXIT
-
 ###################################################
 HELP() {
 
@@ -35,20 +8,11 @@ ubuntu-gdm-set-background-23.04-transparent script (for making Ubuntu 23.04 logi
 via gsettings set com.ubuntu.login-screen background-picture-uri is visible) HELP
 
 Example Commands:
-1. sudo ./ubuntu-gdm-set-background-23.04-transparent --set
-2. ./ubuntu-gdm-set-background-23.04-transparent --help
-
-RESCUE_MODE, Example Commands:
-
-1. sudo ./ubuntu-gdm-set-background-23.04-transparent --set --rescue
-
-Why RESCUE_MODE?
-It is when you try to change the background with some other scripts and then interacted with this script,
-there will be some conflicts. In case you ran other scripts to change the background and then tried this script,
-found conflicts? then add 'rescue' to the end of the command as mentiond above.
-
-Please note that for 'RESCUE_MODE' active internet connection is necessary
-"
+1. ./ubuntu-gdm-set-background-23.04-transparent --help
+2. sudo ./ubuntu-gdm-set-background-23.04-transparent --set --using-yaru-theme
+3. sudo ./ubuntu-gdm-set-background-23.04-transparent --set --using-vanilla-theme
+4. sudo ./ubuntu-gdm-set-background-23.04-transparent --reset --using-vanilla-theme
+5. sudo ./ubuntu-gdm-set-background-23.04-transparent --reset --using-yaru-theme"
 }
 ###################################################
 
@@ -63,22 +27,6 @@ ROUTINE_CHECK() {
     install -d "$dest"
   fi
 
-}
-###################################################
-
-###################################################
-RESCUE_MODE() {
-  echo -e "
->>>>> Trying to reinstall the package yaru-theme-gnome-shell,
-if the reinstallation of the package is succesful, background change will be done
-otherwise No changes will be made <<<<<<<<<
-"
-
-  if ! apt install --reinstall yaru-theme-gnome-shell; then
-    echo -e "
-SCRIPT COULD NOT FINISH THE JOB, FAILURE, NO CHANGES WERE DONE."
-    exit 1
-  fi
 }
 ###################################################
 
@@ -126,6 +74,30 @@ sudo update-alternatives --quiet --set gdm-theme.gresource $source
 }
 ###################################################
 
+codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
+osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
+
+dest="/usr/local/share/gnome-shell/custom-gdm"
+
+if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
+  echo -e "
+--------------------------------------------------------------
+Sorry, Script is only for Ubuntu 23.04
+Exiting...
+--------------------------------------------------------------"
+  exit 1
+fi
+
+if ! dpkg -l | grep -q libglib2.0-dev-bin; then
+  echo -e "
+-----------------------------------------------------------------------------------------------------
+Sorry, the package 'libglib2.0-dev-bin' is not installed. 
+Run sudo apt-get install libglib2.0-dev-bin to install.
+For now, Exiting...
+-----------------------------------------------------------------------------------------------------"
+  exit 1
+fi
+
 ############################################################################################
 case "$1" in
 
@@ -133,6 +105,7 @@ case "$1" in
   HELP
   exit 0
   ;;
+
 --reset)
   ROUTINE_CHECK
   if ! [ -f $dest/custom-gdm-background.gresource ]; then
@@ -146,6 +119,14 @@ No need, Already Reset. (or unlikely background is not set using this Script.)
     exit 1
   else
     rm $dest/custom-gdm-background.gresource
+    if [ "$2" == "--using-vanilla-theme" ]; then
+      source="/usr/share/gnome-shell/gnome-shell-theme.gresource"
+    elif [ "$2" == "--using-yaru-theme" ]; then
+      source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+    else
+      echo "Please provide either '--using-vanilla-theme' or '--using-yaru-theme' as second parameter to this script'"
+      exit 0
+    fi
     update-alternatives --quiet --set gdm-theme.gresource $source
     (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
     echo -e "
@@ -159,9 +140,16 @@ No need, Already Reset. (or unlikely background is not set using this Script.)
 
 --set)
   ROUTINE_CHECK
-  if [ "$2" == "--rescue" ]; then
-    RESCUE_MODE
+  if [ "$2" == "--using-vanilla-theme" ]; then
+    source="/usr/share/gnome-shell/gnome-shell-theme.gresource"
+  elif [ "$2" == "--using-yaru-theme" ]; then
+    source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+  else
+    echo "Please provide either '--using-vanilla-theme' or '--using-yaru-theme' as second parameter to this script'"
+    exit 0
   fi
+  tmp_dir="$(mktemp -d)"
+  trap 'rm -rf "$tmp_dir"' EXIT
   EXTRACT
   mv "$tmp_dir/theme/gdm.css" "$tmp_dir/theme/original.css"
   echo '
@@ -184,7 +172,7 @@ background-color: transparent;
 
 *)
 
-  echo -e "Use the options --set | --help | --reset"
+  echo -e "Use the options --help | --set | --reset"
   exit 1
   ;;
 esac
