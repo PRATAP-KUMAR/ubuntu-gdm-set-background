@@ -118,7 +118,6 @@ No need, Already Reset. (or unlikely background is not set using this Script.)
     echo -e "This Script must be run with sudo$"
     exit 1
   else
-    rm $dest/custom-gdm-background.gresource
     if [ "$2" == "--using-vanilla-theme" ]; then
       source="/usr/share/gnome-shell/gnome-shell-theme.gresource"
     elif [ "$2" == "--using-yaru-theme" ]; then
@@ -127,6 +126,7 @@ No need, Already Reset. (or unlikely background is not set using this Script.)
       echo "Please provide either '--using-vanilla-theme' or '--using-yaru-theme' as second parameter to this script'"
       exit 0
     fi
+    rm $dest/custom-gdm-background.gresource
     update-alternatives --quiet --set gdm-theme.gresource $source
     (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
     echo -e "
@@ -176,3 +176,4 @@ background-color: transparent;
   exit 1
   ;;
 esac
+
