@@ -20,10 +20,11 @@ Please follow this link for setting login background via `gsettings`: https://bu
 
 # `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 21.10, 22.04 & 22.10 GDM Background) HELP
 
-Download the script with this command:
+Download the script with one of these commands:
 
 ```console
 $ wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
+$ curl -fL 'https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background' -o ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
 ```
 
 There are four options
