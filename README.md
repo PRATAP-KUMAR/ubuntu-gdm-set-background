@@ -1,6 +1,6 @@
 # UPDATE for Ubuntu 23.04
-1. script_file -> `ubuntu-gdm-set-background-23.04`. It have four optioins as previous. Image, Color, Gradient Horizontal, Gradient Vertical.
-2. script_file -> `ubuntu-gdm-set-background-23.04-transparent`. It sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMONDED** way.
+1. script_file -> `ubuntu-gdm-set-background-23.04`. It have four options as previous. Image, Color, Gradient Horizontal, Gradient Vertical.
+2. script_file -> `ubuntu-gdm-set-background-23.04-transparent`. It sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way.
 
 Please follow this link for setting login background via gsettings https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
 
@@ -25,14 +25,14 @@ Download the script with below command
 wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
 ````
 
-there are four options
+There are four options
 1. background with image
 2. background with color
 3. background with gradient horizontal ( requires two valid hex color inputs)
 4. background with gradient vertical ( requires two valid hex color inputs)
 
-tip: be ready with valid hex color code in place of below example like #aAbBcC or #dDeEfF. Change them to your preffered hex color codes.
-you may choose colors from https://www.color-hex.com/
+Tip: be ready with valid hex color code in place of below example like `#aAbBcC` or `#dDeEfF`. Change them to your preferred hex color codes.
+You may choose colors from https://www.color-hex.com/
 
 Example Commands:
 
@@ -51,9 +51,9 @@ RESCUE_MODE, Example Commands:
 4. `sudo ./ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
 
 Why RESCUE_MODE?
-It is when you try to change the background with some other scripts and then interacted with this script,
+When you try to change the background with some other scripts and then interacted with this script,
 there will be some conflicts. In case you ran other scripts to change the background and then tried this script,
-found conflicts? then add 'rescue' to the end of the command as mentiond above.
+and found conflicts, then add 'rescue' to the end of the command as mentioned above.
 
 Please note that for 'RESCUE_MODE' active internet connection is necessary
 
