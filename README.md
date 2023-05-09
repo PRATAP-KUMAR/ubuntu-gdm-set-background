@@ -1,31 +1,33 @@
 # UPDATE for Ubuntu 23.04
+
 1. script_file -> `ubuntu-gdm-set-background-23.04`. It have four options as previous. Image, Color, Gradient Horizontal, Gradient Vertical.
 2. script_file -> `ubuntu-gdm-set-background-23.04-transparent`. It sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way.
 
 Please follow this link for setting login background via gsettings https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
 
 > [Test Case]
+>
 > 1. Boot a desktop session
 > 2. Verify that the default aubergine background is displayed in the greeter.
 > 3. Login as the administrator of the machine
 > 4. Install systemd-container
 > 5. Switch to the GDM user:
->  $ sudo machinectl shell gdm@ /bin/bash
+>    $ sudo machinectl shell gdm@ /bin/bash
 > 6. Apply a different background with the command:
->  $ gsettings set com.ubuntu.login-screen background-picture-uri 'file:///usr/share/backgrounds/warty-final-ubuntu.png'
+>    $ gsettings set com.ubuntu.login-screen background-picture-uri 'file:///usr/share/backgrounds/warty-final-ubuntu.png'
 > 7. Logout
 > 8. Verify that the image 'warty-final-ubuntu.png' is displayed as the background of the greeter.
-
 
 # ubuntu-gdm-set-background script (for changing Ubuntu 20.04, 21.04, 21.10, 22.04 & 22.10 GDM Background) HELP
 
 Download the script with below command
 
-````
+```
 wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
-````
+```
 
 There are four options
+
 1. background with image
 2. background with color
 3. background with gradient horizontal ( requires two valid hex color inputs)
@@ -80,4 +82,3 @@ Please note that for 'RESCUE_MODE' active internet connection is necessary
 ![11](https://user-images.githubusercontent.com/40719899/138041974-e229d7a4-9950-4eec-b837-716d7947b192.png)
 
 ![12](https://user-images.githubusercontent.com/40719899/138041976-8c6f1f36-a32c-4ed3-993d-22fe66a9fc42.png)
-
