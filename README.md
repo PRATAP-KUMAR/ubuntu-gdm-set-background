@@ -1,29 +1,29 @@
 # UPDATE for Ubuntu 23.04
 
-1. script_file -> `ubuntu-gdm-set-background-23.04`. It have four options as previous. Image, Color, Gradient Horizontal, Gradient Vertical.
-2. script_file -> `ubuntu-gdm-set-background-23.04-transparent`. It sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way.
+1. `ubuntu-gdm-set-background-23.04` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
+2. `ubuntu-gdm-set-background-23.04-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way.
 
-Please follow this link for setting login background via gsettings https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
+Please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
 
 > [Test Case]
 >
 > 1. Boot a desktop session
-> 2. Verify that the default aubergine background is displayed in the greeter.
+> 2. Verify that the greeter shows the default aubergine background.
 > 3. Login as the administrator of the machine
 > 4. Install systemd-container
 > 5. Switch to the GDM user:
->    $ sudo machinectl shell gdm@ /bin/bash
+>    `$ sudo machinectl shell gdm@ /bin/bash`
 > 6. Apply a different background with the command:
->    $ gsettings set com.ubuntu.login-screen background-picture-uri 'file:///usr/share/backgrounds/warty-final-ubuntu.png'
+>    `$ gsettings set com.ubuntu.login-screen background-picture-uri 'file:///usr/share/backgrounds/warty-final-ubuntu.png'`
 > 7. Logout
-> 8. Verify that the image 'warty-final-ubuntu.png' is displayed as the background of the greeter.
+> 8. Verify that the greeter now shows the image `warty-final-ubuntu.png`.
 
-# ubuntu-gdm-set-background script (for changing Ubuntu 20.04, 21.04, 21.10, 22.04 & 22.10 GDM Background) HELP
+# `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 21.10, 22.04 & 22.10 GDM Background) HELP
 
-Download the script with below command
+Download the script with this command:
 
-```
-wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
+```console
+$ wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
 ```
 
 There are four options
@@ -34,7 +34,7 @@ There are four options
 4. background with gradient vertical ( requires two valid hex color inputs)
 
 Tip: be ready with valid hex color code in place of below example like `#aAbBcC` or `#dDeEfF`. Change them to your preferred hex color codes.
-You may choose colors from https://www.color-hex.com/
+You may choose colors from [color-hex.com](https://www.color-hex.com/)
 
 Example Commands:
 
@@ -53,11 +53,11 @@ RESCUE_MODE, Example Commands:
 4. `sudo ./ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
 
 Why RESCUE_MODE?
-When you try to change the background with some other scripts and then interacted with this script,
-there will be some conflicts. In case you ran other scripts to change the background and then tried this script,
+When you try to change the background with some other scripts and then interact with this script,
+there could be some conflicts. In case you ran other scripts to change the background and then tried this script,
 and found conflicts, then add 'rescue' to the end of the command as mentioned above.
 
-Please note that for 'RESCUE_MODE' active internet connection is necessary
+Please note that for `RESCUE_MODE` active internet connection is necessary
 
 ![1](https://user-images.githubusercontent.com/40719899/138041931-c61f5223-b446-47f4-bc30-4926b380db9f.png)
 
