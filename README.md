@@ -5,7 +5,7 @@ there are two choices for the theme
 1. `bash ubuntu-gdm-set-background-23.10-transparent --set --using-vanilla-theme`
 2. `bash ubuntu-gdm-set-background-23.10-transparent --set --using-yaru-theme`
 
-Any of the command above removes the default dimming on log screen.
+Any of the command above removes the default dimming on login screen.
 
 Then you can set background-color or image as you wish by command line by following this link https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
 
