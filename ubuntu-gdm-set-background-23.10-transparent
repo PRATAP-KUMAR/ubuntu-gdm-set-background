@@ -65,7 +65,7 @@ SET_GRESOURCE() {
 \xf0\x9f\x98\x80\x00 'login-dialog background is made transparent succesfully'
 Changes will be effective after a Reboot (CTRL+ALT+F1 may show the changes immediately)
 If something went wrong, log on to tty and run the below command
-sudo update-alternatives --quiet --set gdm-theme.gresource $source
+sudo update-alternatives --quiet --set gdm-theme.gresource /usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource
 "
   else
     echo Failure
