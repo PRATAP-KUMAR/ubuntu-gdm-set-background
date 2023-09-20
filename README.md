@@ -1,25 +1,3 @@
-# UPDATE for Ubuntu 23.10
-use script named `ubuntu-gdm-set-background-23.10-transparent`
-
-there are two choices for the theme
-1. `bash ubuntu-gdm-set-background-23.10-transparent --set --using-vanilla-theme`
-2. `bash ubuntu-gdm-set-background-23.10-transparent --set --using-yaru-theme`
-
-Any of the command above removes the default dimming on login screen.
-
-Then you can set background-color or image as you wish by command line by following this link https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
-
-Example for setting the background
-````
-sudo apt install systemd-container
-sudo machinectl shell gdm@ /bin/bash
-gsettings set com.ubuntu.login-screen background-picture-uri 'file:///usr/share/backgrounds/Milkyway_by_mizuno_as.png'
-exit
-````
-
-![image](https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background/assets/40719899/e969f6d1-1054-4b57-9d3b-ba5233a6d59b)
-
-
 # UPDATE for Ubuntu 23.04
 
 1. `ubuntu-gdm-set-background-23.04` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
