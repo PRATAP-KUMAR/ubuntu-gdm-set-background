@@ -1,6 +1,17 @@
 # UPDATE for Ubuntu 23.10
 use script named `ubuntu-gdm-set-background-23.10-transparent`
 
+there are two choices for the theme
+1. `bash ubuntu-gdm-set-background-23.10-transparent --set --using-vanilla-theme`
+2. `bash ubuntu-gdm-set-background-23.10-transparent --set --using-yaru-theme`
+
+Any of the command above removes the default dimming on log screen.
+
+Then you can set background-color or image as you wish by command line by following this link https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
+
+![image](https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background/assets/40719899/51af1fe9-a1a8-4ee2-936e-cffdee8d065e)
+
+
 # UPDATE for Ubuntu 23.04
 
 1. `ubuntu-gdm-set-background-23.04` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
