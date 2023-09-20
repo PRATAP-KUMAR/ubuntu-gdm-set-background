@@ -1,3 +1,6 @@
+# UPDATE for Ubuntu 23.10
+use script named `ubuntu-gdm-set-background-23.10-transparent`
+
 # UPDATE for Ubuntu 23.04
 
 1. `ubuntu-gdm-set-background-23.04` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
