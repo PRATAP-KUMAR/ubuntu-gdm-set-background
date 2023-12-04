@@ -1,3 +1,6 @@
+# UPDATE Dec 4th for GNOME 45
+https://github.com/PRATAP-KUMAR/gdm-extension
+
 # UPDATE for Ubuntu 23.04
 
 1. `ubuntu-gdm-set-background-23.04` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
