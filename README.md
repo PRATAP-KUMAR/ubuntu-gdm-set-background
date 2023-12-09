@@ -51,10 +51,10 @@ Example Commands:
 
 RESCUE_MODE, Example Commands:
 
-1. `sudo ./ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg rescue`
-2. `sudo ./ubuntu-gdm-set-background --color \#aAbBcC rescue`
-3. `sudo ./ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue`
-4. `sudo ./ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
+1. `sudo bash ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg rescue`
+2. `sudo bash ubuntu-gdm-set-background --color \#aAbBcC rescue`
+3. `sudo bash ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue`
+4. `sudo bash ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
 
 Why RESCUE_MODE?
 When you try to change the background with some other scripts and then interact with this script,
