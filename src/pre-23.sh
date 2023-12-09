@@ -13,12 +13,18 @@ RCol='\e[0m'
 codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
 osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
-if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
+if [ "$codename" == "focal" ] || [ "$codename" == "hirsute" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
+  GDM_RESOURCE_CONFIG_NAME="gdm3"
+
+elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
+  GDM_RESOURCE_CONFIG_NAME="gdm"
+
+else
   echo -e "${Red}
 ------------------------------------------------------------------
-Sorry, Script is only for Ubuntu ${BWhi}23.04 ${Red}Only
+Sorry, Script is only for Ubuntu ${BWhi}20.04, 21.04, 21.10, 22.04 & 22.10${Red} Only
 Exiting...
---------------------------------------------------------------
+------------------------------------------------------------------
 ${RCol}"
   exit 1
 fi
@@ -26,11 +32,10 @@ fi
 if ! dpkg -l | grep -q libglib2.0-dev-bin; then
   echo -e "${Red}
 -----------------------------------------------------------------------------------------------------
-Sorry, the package ${BWhi}'libglib2.0-dev-bin'${Red} is not installed. 
-Run ${BGre}sudo apt-get install libglib2.0-dev-bin${Red} to install.
-For now, Exiting...
+Installing dependency ${BGre}'libglib2.0-dev-bin'${Red}...
 -----------------------------------------------------------------------------------------------------${RCol}"
-  exit 1
+  #exit 1
+  sudo apt-get install libglib2.0-dev-bin
 fi
 
 source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
@@ -38,12 +43,11 @@ dest="/usr/local/share/gnome-shell/custom-gdm"
 color='#456789'
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
-
 ###################################################
 HELP() {
 
   echo -e "
-${BGre}ubuntu-gdm-set-background${BGre} script (for changing Ubuntu ${BWhi}23.04 ${RCol} GDM Background) HELP
+${BGre}ubuntu-gdm-set-background${BGre} script (for changing Ubuntu ${BWhi}20.04, 21.04, 21.10 & 22.04${RCol} GDM Background) HELP
 
 there are four options
 1. background with image
@@ -138,15 +142,15 @@ EOF
 
 ###################################################
 SET_GRESOURCE() {
-  update-alternatives --quiet --install "/usr/share/gnome-shell/gdm-theme.gresource" "gdm-theme.gresource" "$dest/custom-gdm-background.gresource" 0
-  update-alternatives --quiet --set gdm-theme.gresource "$dest/custom-gdm-background.gresource"
+  update-alternatives --quiet --install "/usr/share/gnome-shell/$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$dest/custom-gdm-background.gresource" 0
+  update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$dest/custom-gdm-background.gresource"
 
-  if update-alternatives --query gdm-theme.gresource | grep -q "Value: $dest/custom-gdm-background.gresource"; then
+  if update-alternatives --query "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" | grep -q "Value: $dest/custom-gdm-background.gresource"; then
     echo -e "
-\xf0\x9f\x98\x80\x00 ${BGre}'background change is successful'${RCol}
+\xf0\x9f\x98\x80\x00 ${BGre}Seems 'background change is successful'${RCol}
 Changes will be effective after a Reboot (${BWhi}CTRL+ALT+F1${RCol} may show the changes immediately)
 If something went wrong, log on to tty and run the below command
-${BWhi}$ sudo update-alternatives --quiet --set gdm-theme.gresource $source${RCol}
+${BWhi}$ sudo update-alternatives --quiet --set $GDM_RESOURCE_CONFIG_NAME-theme.gresource $source${RCol}
 "
   else
     echo Failure
@@ -174,7 +178,7 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
     exit 1
   else
     rm "$dest/custom-gdm-background.gresource"
-    update-alternatives --quiet --set gdm-theme.gresource "$source"
+    update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$source"
     #! Run in subshell so outside pwd not changed
     (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
     echo -e "${Gre}
@@ -201,13 +205,13 @@ No need, Already Reset. ${Red}(or unlikely background is not set using this Scri
     EXTRACT
 
     cp "$image_path" "$tmp_dir/theme/gdm-background"
-    mv "$tmp_dir/theme/gdm.css" "$tmp_dir/theme/original.css"
+    mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
     echo '@import url("resource:///org/gnome/shell/theme/original.css");
-.login-dialog {
+#lockDialogGroup {
 background: '"$color"' url("resource:///org/gnome/shell/theme/gdm-background");
 background-repeat: no-repeat;
 background-size: cover;
-background-position: center; }' >"$tmp_dir/theme/gdm.css"
+background-position: center; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
     CREATE_XML
     glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
     mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
@@ -244,10 +248,10 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
 
   EXTRACT
 
-  mv "$tmp_dir/theme/gdm.css" "$tmp_dir/theme/original.css"
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
-.login-dialog {
-background-color: '"$2"'; }' >"$tmp_dir/theme/gdm.css"
+#lockDialogGroup {
+background-color: '"$2"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
 
   glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
@@ -286,12 +290,12 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
   fi
 
   EXTRACT
-  mv "$tmp_dir/theme/gdm.css" "$tmp_dir/theme/original.css"
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
   echo '@import url("resource:///org/gnome/shell/theme/original.css");
-.login-dialog {
+#lockDialogGroup {
 background-gradient-direction: '"$direction"';
 background-gradient-start: '"$3"';
-background-gradient-end: '"$4"'; }' >"$tmp_dir/theme/gdm.css"
+background-gradient-end: '"$4"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
   glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
   mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"

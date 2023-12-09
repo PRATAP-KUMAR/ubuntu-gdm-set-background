@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Colors
+Red='\e[0;31m'
+BRed='\e[1;31m'
+BIRed='\e[1;91m'
+Gre='\e[0;32m'
+BGre='\e[1;32m'
+BBlu='\e[1;34m'
+BWhi='\e[1;37m'
+RCol='\e[0m'
+
+codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
+osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
+
+if [ "$codename" == "mantic" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
+bash src/post-23-transparent.sh "$@"
+else
+  echo -e "${Red}
+------------------------------------------------------------------
+Sorry, Script is only for Ubuntu ${BWhi}23.04 & 23.10${Red} Only
+Exiting...
+------------------------------------------------------------------
+${RCol}"
+  exit 1
+fi

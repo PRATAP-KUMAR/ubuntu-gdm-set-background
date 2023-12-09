@@ -79,6 +79,7 @@ osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
 dest="/usr/local/share/gnome-shell/custom-gdm"
 
+if [ "$codename" != "mantic" ]; then
 if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
   echo -e "
 --------------------------------------------------------------
@@ -87,15 +88,15 @@ Exiting...
 --------------------------------------------------------------"
   exit 1
 fi
+fi
 
 if ! dpkg -l | grep -q libglib2.0-dev-bin; then
   echo -e "
 -----------------------------------------------------------------------------------------------------
-Sorry, the package 'libglib2.0-dev-bin' is not installed. 
-Run sudo apt-get install libglib2.0-dev-bin to install.
-For now, Exiting...
+Installing dependency 'libglib2.0-dev-bin'...
 -----------------------------------------------------------------------------------------------------"
-  exit 1
+  #exit 1
+  sudo apt-get install libglib2.0-dev-bin
 fi
 
 ############################################################################################
