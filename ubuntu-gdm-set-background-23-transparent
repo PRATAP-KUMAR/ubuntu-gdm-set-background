@@ -79,6 +79,7 @@ osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
 dest="/usr/local/share/gnome-shell/custom-gdm"
 
+if [ "$codename" != "mantic" ]; then
 if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
   echo -e "
 --------------------------------------------------------------
@@ -86,6 +87,7 @@ Sorry, Script is only for Ubuntu 23.04
 Exiting...
 --------------------------------------------------------------"
   exit 1
+fi
 fi
 
 if ! dpkg -l | grep -q libglib2.0-dev-bin; then
