@@ -1,10 +1,10 @@
 # UPDATE Dec 4th for GNOME 45
 https://github.com/PRATAP-KUMAR/gdm-extension
 
-# UPDATE for Ubuntu 23.04
+# UPDATE for Ubuntu 23.04 & 23.10
 
-1. `ubuntu-gdm-set-background-23.04` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
-2. `ubuntu-gdm-set-background-23.04-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way.
+1. `ubuntu-gdm-set-background` -> for Ubuntu 23 has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
+2. `ubuntu-gdm-set-background-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way.
 
 Please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
 
