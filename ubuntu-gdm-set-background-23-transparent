@@ -93,11 +93,10 @@ fi
 if ! dpkg -l | grep -q libglib2.0-dev-bin; then
   echo -e "
 -----------------------------------------------------------------------------------------------------
-Sorry, the package 'libglib2.0-dev-bin' is not installed. 
-Run sudo apt-get install libglib2.0-dev-bin to install.
-For now, Exiting...
+Installing dependency 'libglib2.0-dev-bin'...
 -----------------------------------------------------------------------------------------------------"
-  exit 1
+  #exit 1
+  sudo apt-get install libglib2.0-dev-bin
 fi
 
 ############################################################################################

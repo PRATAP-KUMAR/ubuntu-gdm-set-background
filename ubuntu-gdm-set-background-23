@@ -28,11 +28,10 @@ fi
 if ! dpkg -l | grep -q libglib2.0-dev-bin; then
   echo -e "${Red}
 -----------------------------------------------------------------------------------------------------
-Sorry, the package ${BWhi}'libglib2.0-dev-bin'${Red} is not installed. 
-Run ${BGre}sudo apt-get install libglib2.0-dev-bin${Red} to install.
-For now, Exiting...
+Installing dependency ${BGre}'libglib2.0-dev-bin'${Red}...
 -----------------------------------------------------------------------------------------------------${RCol}"
-  exit 1
+  #exit 1
+  sudo apt-get install libglib2.0-dev-bin
 fi
 
 source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
