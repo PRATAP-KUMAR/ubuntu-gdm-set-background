@@ -42,12 +42,12 @@ You may choose colors from [color-hex.com](https://www.color-hex.com/)
 
 Example Commands:
 
-1. `sudo ./ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg`
-2. `sudo ./ubuntu-gdm-set-background --color \#aAbBcC`
-3. `sudo ./ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
-4. `sudo ./ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
-5. `sudo ./ubuntu-gdm-set-background --reset`
-6. `./ubuntu-gdm-set-background --help`
+1. `sudo bash ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg`
+2. `sudo bash ubuntu-gdm-set-background --color \#aAbBcC`
+3. `sudo bash ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
+4. `sudo bash ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
+5. `sudo bash ubuntu-gdm-set-background --reset`
+6. `bash ubuntu-gdm-set-background --help`
 
 RESCUE_MODE, Example Commands:
 
