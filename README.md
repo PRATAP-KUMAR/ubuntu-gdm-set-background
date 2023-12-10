@@ -1,3 +1,11 @@
+# ubuntu-gdm-set-background
+
+Set Background for Ubuntu's (Gnome's GDM) lock/login screen!
+
+Useful for privacy, where your personal desktop background isn't revealed to those around who don't have your password.
+
+----
+
 # Note:
 ## Before running this script, first please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536. If you are not satisfied with the result then only go for the script.
 
