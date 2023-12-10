@@ -1,0 +1,2 @@
+- system-wide installable via install.sh, inspired by 01VCS
+- merge transparent into main, forming one single script!
