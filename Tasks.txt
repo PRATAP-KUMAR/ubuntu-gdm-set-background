@@ -1,2 +1,2 @@
-- system-wide installable via install.sh, inspired by 01VCS
 - merge transparent into main, forming one single script!
+- system-wide installable via install.sh, inspired by 01VCS (src/, README.md and LICENSE goes to /usr/lib/ubuntu-gdm-set-background). ubuntu-gdm-set-background should run /src/ differently accordingly to installed or not!
