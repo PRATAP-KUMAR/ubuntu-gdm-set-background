@@ -69,6 +69,8 @@ and found conflicts, then add 'rescue' to the end of the command as mentioned ab
 
 Please note that for `RESCUE_MODE` active internet connection is necessary
 
+# Screenshots (some with their respective recipe command below each)
+
 ![1](https://user-images.githubusercontent.com/40719899/138041931-c61f5223-b446-47f4-bc30-4926b380db9f.png)
 
 ![2](https://user-images.githubusercontent.com/40719899/138041947-ca1d8f27-a294-45c4-9f0a-50e6c5de8004.png)
@@ -77,18 +79,36 @@ Please note that for `RESCUE_MODE` active internet connection is necessary
 
 ![4](https://user-images.githubusercontent.com/40719899/138041957-e8dcae5c-b52d-4c58-be04-d899b9e49ce8.png)
 
+`sudo bash ubuntu-gdm-set-background --color \#456789`
+
 ![5](https://user-images.githubusercontent.com/40719899/138041959-32db8c1b-7679-4513-9c15-5071f231f796.png)
+
+`sudo bash ubuntu-gdm-set-background --color \#ff00ff`
 
 ![6](https://user-images.githubusercontent.com/40719899/138041960-3978f9c0-8cee-4a68-82fb-5f77865c8c77.png)
 
+`sudo bash ubuntu-gdm-set-background --color \#282828`
+
 ![7](https://user-images.githubusercontent.com/40719899/138041961-7c58337d-9cbb-42d4-974f-d260a024e5fd.png)
 
+`sudo bash ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
+
 ![8](https://user-images.githubusercontent.com/40719899/138041963-a4981163-1c1f-4886-9a67-cfc1827a5d80.png)
+
+`sudo bash ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
 
 ![9](https://user-images.githubusercontent.com/40719899/138041965-19699e82-4d31-4539-80ac-3f3bc559504d.png)
 
 ![10](https://user-images.githubusercontent.com/40719899/138041973-bde88f7c-8fe5-4862-87bc-3affd4d44dbf.png)
 
+`sudo bash ubuntu-gdm-set-background --color \#8a5f2f`
+
 ![11](https://user-images.githubusercontent.com/40719899/138041974-e229d7a4-9950-4eec-b837-716d7947b192.png)
 
+`sudo bash ubuntu-gdm-set-background --gradient horizontal \#8ab333 \#2aad9e`
+
 ![12](https://user-images.githubusercontent.com/40719899/138041976-8c6f1f36-a32c-4ed3-993d-22fe66a9fc42.png)
+
+`sudo bash ubuntu-gdm-set-background --gradient vertical \#3338ab \#00abcd rescue`
+
+Has discovered the gradient of the backgrounds thanks to the awesome: https://cssgradient.io/
