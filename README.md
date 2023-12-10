@@ -1,12 +1,5 @@
-# UPDATE on Dec 4th - for Ubuntu 23.10
-this is highly recommonded way - https://github.com/PRATAP-KUMAR/gdm-extension as it avoids recompiling of gresources.
-
-# UPDATE for Ubuntu 23.04 & 23.10
-
-1. `ubuntu-gdm-set-background` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
-2. `ubuntu-gdm-set-background-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way for 23.04.
-
-Please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
+# Note:
+## Before running this script, first please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536. If you are not satisfied with the result then only go for the script.
 
 > [Test Case]
 >
@@ -21,7 +14,18 @@ Please follow this link for setting login background via `gsettings`: https://bu
 > 7. Logout
 > 8. Verify that the greeter now shows the image `warty-final-ubuntu.png`.
 
-# `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 21.10, 22.04 & 22.10 GDM Background) HELP
+
+### UPDATE on Dec 4th - for Ubuntu 23.10
+this is highly recommonded way - https://github.com/PRATAP-KUMAR/gdm-extension as it avoids recompiling of gresources.
+
+## UPDATE for Ubuntu 23.04 & 23.10
+
+1. `ubuntu-gdm-set-background` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
+2. `ubuntu-gdm-set-background-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way for 23.04.
+
+Please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
+
+# `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 22.04, 23.10 GDM Background) HELP
 
 Download the script with one of these commands:
 
