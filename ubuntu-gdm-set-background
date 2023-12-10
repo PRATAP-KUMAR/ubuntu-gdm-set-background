@@ -22,7 +22,7 @@ if [ "$codename" = "mantic" ]; then
 fi
 
 if [ "$codename" == "focal" ] || [ "$codename" == "hirsute" ] || [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] || [ "$codename" == "mantic" ] || [ "$codename" == "kinetic" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
-echo
+: #no-op cmd, thanks to https://stackoverflow.com/a/17583599
 else
   echo -e "${Red}
 ------------------------------------------------------------------
