@@ -228,7 +228,7 @@ $ ./ubuntu-gdm-set-background --help${RCol}"
 --color)
   if [ -z "$2" ]; then
     echo -e "${Red}Color is not provided.
-      Use ${BWhi}\$ sudo ./ubuntu-gdm-set-background --color #aee02a${RCol} to set ${BWhi}#aee02a${RCol} as the background color.${RCol}"
+      Use ${BWhi}\$ sudo ./ubuntu-gdm-set-background --color \#aee02a${RCol} to set ${BWhi}#aee02a${RCol} as the background color.${RCol}"
     exit 1
   fi
   if ! [[ "$2" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
