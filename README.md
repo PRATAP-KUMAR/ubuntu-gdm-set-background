@@ -14,18 +14,20 @@
 > 7. Logout
 > 8. Verify that the greeter now shows the image `warty-final-ubuntu.png`.
 
+# UPDATES for Ubuntu 23.04+
 
-### UPDATE on Dec 4th - for Ubuntu 23.10
-this is highly recommonded way - https://github.com/PRATAP-KUMAR/gdm-extension as it avoids recompiling of gresources.
+## for Ubuntu 23.10/Gnome 45
 
-## UPDATE for Ubuntu 23.04 & 23.10
+This is highly recommonded way: https://github.com/PRATAP-KUMAR/gdm-extension - as it avoids having to recompile gresources.
+
+## for Ubuntu 23.04+
 
 1. `ubuntu-gdm-set-background` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
-2. `ubuntu-gdm-set-background-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way for 23.04.
+2. `ubuntu-gdm-set-background-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way for 23.04+.
 
 Please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
 
-# `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 22.04, 23.10 GDM Background) HELP
+# `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 22.04, 22.10, 23.04, 23.10 GDM Background) HELP
 
 Download the script with one of these commands:
 
@@ -55,10 +57,10 @@ Example Commands:
 
 RESCUE_MODE, Example Commands:
 
-1. `sudo ./ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg rescue`
-2. `sudo ./ubuntu-gdm-set-background --color \#aAbBcC rescue`
-3. `sudo ./ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue`
-4. `sudo ./ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
+1. `sudo bash ubuntu-gdm-set-background --image /home/user/backgrounds/image.jpg rescue`
+2. `sudo bash ubuntu-gdm-set-background --color \#aAbBcC rescue`
+3. `sudo bash ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF rescue`
+4. `sudo bash ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF rescue`
 
 Why RESCUE_MODE?
 When you try to change the background with some other scripts and then interact with this script,
@@ -66,6 +68,8 @@ there could be some conflicts. In case you ran other scripts to change the backg
 and found conflicts, then add 'rescue' to the end of the command as mentioned above.
 
 Please note that for `RESCUE_MODE` active internet connection is necessary
+
+# Screenshots (some with their respective recipe command below each)
 
 ![1](https://user-images.githubusercontent.com/40719899/138041931-c61f5223-b446-47f4-bc30-4926b380db9f.png)
 
@@ -75,18 +79,36 @@ Please note that for `RESCUE_MODE` active internet connection is necessary
 
 ![4](https://user-images.githubusercontent.com/40719899/138041957-e8dcae5c-b52d-4c58-be04-d899b9e49ce8.png)
 
+`sudo bash ubuntu-gdm-set-background --color \#456789`
+
 ![5](https://user-images.githubusercontent.com/40719899/138041959-32db8c1b-7679-4513-9c15-5071f231f796.png)
+
+`sudo bash ubuntu-gdm-set-background --color \#ff00ff`
 
 ![6](https://user-images.githubusercontent.com/40719899/138041960-3978f9c0-8cee-4a68-82fb-5f77865c8c77.png)
 
+`sudo bash ubuntu-gdm-set-background --color \#282828`
+
 ![7](https://user-images.githubusercontent.com/40719899/138041961-7c58337d-9cbb-42d4-974f-d260a024e5fd.png)
 
+`sudo bash ubuntu-gdm-set-background --gradient vertical \#aAbBcC \#dDeEfF`
+
 ![8](https://user-images.githubusercontent.com/40719899/138041963-a4981163-1c1f-4886-9a67-cfc1827a5d80.png)
+
+`sudo bash ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
 
 ![9](https://user-images.githubusercontent.com/40719899/138041965-19699e82-4d31-4539-80ac-3f3bc559504d.png)
 
 ![10](https://user-images.githubusercontent.com/40719899/138041973-bde88f7c-8fe5-4862-87bc-3affd4d44dbf.png)
 
+`sudo bash ubuntu-gdm-set-background --color \#8a5f2f`
+
 ![11](https://user-images.githubusercontent.com/40719899/138041974-e229d7a4-9950-4eec-b837-716d7947b192.png)
 
+`sudo bash ubuntu-gdm-set-background --gradient horizontal \#8ab333 \#2aad9e`
+
 ![12](https://user-images.githubusercontent.com/40719899/138041976-8c6f1f36-a32c-4ed3-993d-22fe66a9fc42.png)
+
+`sudo bash ubuntu-gdm-set-background --gradient vertical \#3338ab \#00abcd rescue`
+
+Has discovered the gradient of the backgrounds thanks to the awesome: https://cssgradient.io/
