@@ -2,7 +2,7 @@
 
 Set Background for Ubuntu's (Gnome's GDM) lock/login screen!
 
-Useful for privacy, where your personal desktop background isn't revealed to those around who don't have your password.
+Beyond eyecandy, this is useful for privacy: where your personal desktop background isn't revealed to those around who don't have your password.
 
 ----
 
@@ -117,6 +117,6 @@ Please note that for `RESCUE_MODE` active internet connection is necessary
 
 ![12](https://user-images.githubusercontent.com/40719899/138041976-8c6f1f36-a32c-4ed3-993d-22fe66a9fc42.png)
 
-`sudo bash ubuntu-gdm-set-background --gradient vertical \#3338ab \#00abcd rescue`
+`sudo bash ubuntu-gdm-set-background --gradient vertical \#3338ab \#00abcd`
 
 Has discovered the gradient of the backgrounds thanks to the awesome: https://cssgradient.io/
