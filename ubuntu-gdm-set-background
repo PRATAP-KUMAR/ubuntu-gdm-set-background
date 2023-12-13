@@ -24,11 +24,11 @@ if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic)$ && "$osname" == "Ubu
   bash src/pre-23.sh "$@"  # Changed to use double quotes for consistency
 fi
 
-if [ "$codename" = "mantic" ]; then
+if [[ "$codename" =~ ^(lunar|mantic)$ && "$osname" == "Ubuntu" ]]; then
   bash src/post-23.sh "$@"  # Changed to use double quotes for consistency
 fi
 
-if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|mantic)$ && "$osname" == "Ubuntu" ]]; then  # Changed the condition for better readability
+if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|lunar|mantic)$ && "$osname" == "Ubuntu" ]]; then  # Changed the condition for better readability
 : #no-op cmd, thanks to https://stackoverflow.com/a/17583599
 else
   echo -e "${Red}

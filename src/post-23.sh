@@ -13,17 +13,17 @@ RCol='\e[0m'
 codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
 osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
-if [ "$codename" != "mantic" ]; then
-if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
-  echo -e "${Red}
-------------------------------------------------------------------
-Sorry, Script is only for Ubuntu ${BWhi}23.04 ${Red}Only
-Exiting...
---------------------------------------------------------------
-${RCol}"
-  exit 1
-fi
-fi
+#if [ "$codename" != "mantic" ]; then
+#if [ "$codename" != "lunar" ] || [ "$osname" != '"Ubuntu"' ]; then
+#  echo -e "${Red}
+#------------------------------------------------------------------
+#Sorry, Script is only for Ubuntu ${BWhi}23.04 & 23.10 ${Red}Only
+#Exiting...
+#--------------------------------------------------------------
+#${RCol}"
+#  exit 1
+#fi
+#fi
 
 if ! dpkg -l | grep -q libglib2.0-dev-bin; then
   echo -e "${Red}

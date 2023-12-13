@@ -1,0 +1,72 @@
+This folder: /media/daniella/20d8178a-2e0a-4945-8ef9-47eeb4da801e/home/daniella/ubuntu-gdm-set-background
+
+  File: ./install.sh.alpha
+  Size: 5898      	Blocks: 16         IO Block: 4096   regular file
+Device: 8,43	Inode: 2893770     Links: 1
+Access: (0755/-rwxr-xr-x)  Uid: ( 1000/daniella)   Gid: ( 1000/daniella)
+Access: 2023-12-10 00:38:49.435209200 -0300
+Modify: 2023-03-04 23:41:45.953390100 -0300
+Change: 2023-12-10 00:38:53.763236352 -0300
+ Birth: 2023-12-10 00:38:49.351208720 -0300
+IPFS hash: QmPeM7LfVLYunYZYNenJuZjG1r2PaAkE8344RH6f9NaHXr
+------------------------------
+  File: ./LICENSE
+  Size: 35149     	Blocks: 72         IO Block: 4096   regular file
+Device: 8,43	Inode: 2893527     Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/daniella)   Gid: ( 1000/daniella)
+Access: 2023-12-09 03:34:33.017532180 -0300
+Modify: 2023-12-09 03:28:10.279371931 -0300
+Change: 2023-12-09 03:28:10.279371931 -0300
+ Birth: 2023-12-09 03:28:10.279371931 -0300
+IPFS hash: QmTBpqbvJLZaq3hTMUhxX5hyJaSCeWe6Q5FRctQbsD6EsE
+------------------------------
+  File: ./README.md
+  Size: 5874      	Blocks: 16         IO Block: 4096   regular file
+Device: 8,43	Inode: 2893753     Links: 1
+Access: (0775/-rwxrwxr-x)  Uid: ( 1000/daniella)   Gid: ( 1000/daniella)
+Access: 2023-12-10 00:36:40.222462233 -0300
+Modify: 2023-12-10 00:36:20.594360410 -0300
+Change: 2023-12-10 00:36:20.598360430 -0300
+ Birth: 2023-12-10 00:36:20.590360389 -0300
+IPFS hash: QmYjMwRe4iGCa6jth9otfMukXcVBjm2jKTiFxQWA1UzqhS
+------------------------------
+  File: ./src
+  Size: 4096      	Blocks: 8          IO Block: 4096   directory
+Device: 8,43	Inode: 2893606     Links: 2
+Access: (0775/drwxrwxr-x)  Uid: ( 1000/daniella)   Gid: ( 1000/daniella)
+Access: 2023-12-09 23:52:58.827398380 -0300
+Modify: 2023-12-09 23:52:50.939331407 -0300
+Change: 2023-12-09 23:52:50.939331407 -0300
+ Birth: 2023-12-09 03:43:57.116687908 -0300
+IPFS hash: 
+------------------------------
+  File: ./Tasks.txt
+  Size: 280       	Blocks: 8          IO Block: 4096   regular file
+Device: 8,43	Inode: 2893744     Links: 1
+Access: (0664/-rw-rw-r--)  Uid: ( 1000/daniella)   Gid: ( 1000/daniella)
+Access: 2023-12-10 00:38:33.875112825 -0300
+Modify: 2023-12-10 00:38:23.707050710 -0300
+Change: 2023-12-10 00:38:23.723050807 -0300
+ Birth: 2023-12-10 00:38:23.707050710 -0300
+IPFS hash: QmSUSd86h8Bsvx7aJdcSC4PGJpAm8Sra5N4B4NUAV1aGZQ
+------------------------------
+  File: ./ubuntu-gdm-set-background
+  Size: 1182      	Blocks: 8          IO Block: 4096   regular file
+Device: 8,43	Inode: 2893671     Links: 1
+Access: (0775/-rwxrwxr-x)  Uid: ( 1000/daniella)   Gid: ( 1000/daniella)
+Access: 2023-12-09 22:07:33.961059843 -0300
+Modify: 2023-12-09 19:46:59.785341340 -0300
+Change: 2023-12-09 19:46:59.793341432 -0300
+ Birth: 2023-12-09 19:46:59.773341201 -0300
+IPFS hash: QmUEPujDcqeY3kPE1PKY2pJdCe5r7TBnu7SJpbjSD1virD
+------------------------------
+  File: ./ubuntu-gdm-set-background-transparent
+  Size: 645       	Blocks: 8          IO Block: 4096   regular file
+Device: 8,43	Inode: 2893608     Links: 1
+Access: (0775/-rwxrwxr-x)  Uid: ( 1000/daniella)   Gid: ( 1000/daniella)
+Access: 2023-12-09 04:02:28.705757706 -0300
+Modify: 2023-12-09 03:59:12.179450933 -0300
+Change: 2023-12-09 03:59:12.183450501 -0300
+ Birth: 2023-12-09 03:59:12.179450933 -0300
+IPFS hash: QmTo1jZKHbmX1ND78MnmwtxwGE4Xax3GiFUk8QvkbHUHhD
+------------------------------
