@@ -44,11 +44,11 @@ $ wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-backgrou
 $ curl -fL 'https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background' -o ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
 ```-->
 ## Installation
-1. clone the repo
-2. cd
-3. sudo bash ubuntu-gdm-set-background --help or sudo bash ubuntu-gdm-set-background-transparent --help
+1. clone the repo `git clone https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background.git`
+2. `cd ubuntu-gdm-set-background` 
+3. `bash ubuntu-gdm-set-background --help` or `bash ubuntu-gdm-set-background-transparent --help`
 
-There are four options
+There are four options for the plain script which is `ubuntu-gdm-set-background`:
 
 1. background with image
 2. background with color
@@ -109,17 +109,15 @@ Please note that for `RESCUE_MODE` active internet connection is necessary
 
 `sudo bash ubuntu-gdm-set-background --gradient horizontal \#aAbBcC \#dDeEfF`
 
-![9](https://user-images.githubusercontent.com/40719899/138041965-19699e82-4d31-4539-80ac-3f3bc559504d.png)
-
-![10](https://user-images.githubusercontent.com/40719899/138041973-bde88f7c-8fe5-4862-87bc-3affd4d44dbf.png)
+![9](https://user-images.githubusercontent.com/40719899/138041973-bde88f7c-8fe5-4862-87bc-3affd4d44dbf.png)
 
 `sudo bash ubuntu-gdm-set-background --color \#8a5f2f`
 
-![11](https://user-images.githubusercontent.com/40719899/138041974-e229d7a4-9950-4eec-b837-716d7947b192.png)
+![10](https://user-images.githubusercontent.com/40719899/138041974-e229d7a4-9950-4eec-b837-716d7947b192.png)
 
 `sudo bash ubuntu-gdm-set-background --gradient horizontal \#8ab333 \#2aad9e`
 
-![12](https://user-images.githubusercontent.com/40719899/138041976-8c6f1f36-a32c-4ed3-993d-22fe66a9fc42.png)
+![11](https://user-images.githubusercontent.com/40719899/138041976-8c6f1f36-a32c-4ed3-993d-22fe66a9fc42.png)
 
 `sudo bash ubuntu-gdm-set-background --gradient vertical \#3338ab \#00abcd`
 
