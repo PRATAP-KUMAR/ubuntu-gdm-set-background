@@ -1,3 +1,11 @@
+# ubuntu-gdm-set-background
+
+Set Background for Ubuntu's (Gnome's GDM) lock/login screen!
+
+Beyond eyecandy, this is useful for privacy: where your personal desktop background isn't revealed to those around who don't have your password.
+
+----
+
 # Note:
 ## Before running this script, first please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536. If you are not satisfied with the result then only go for the script.
 
@@ -29,12 +37,18 @@ Please follow this link for setting login background via `gsettings`: https://bu
 
 # `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 22.04, 22.10, 23.04, 23.10 GDM Background) HELP
 
+<!--Download the script with one of these commands:
+
+```console
+$ wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
+$ curl -fL 'https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background' -o ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
+```-->
 ## Installation
 1. clone the repo `git clone https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background.git`
 2. `cd ubuntu-gdm-set-background` 
 3. `bash ubuntu-gdm-set-background --help` or `bash ubuntu-gdm-set-background-transparent --help`
 
-There are four options for the plain script which is `ubuntu-gdm-set-background`
+There are four options for the plain script which is `ubuntu-gdm-set-background`:
 
 1. background with image
 2. background with color
@@ -105,6 +119,6 @@ Please note that for `RESCUE_MODE` active internet connection is necessary
 
 ![11](https://user-images.githubusercontent.com/40719899/138041976-8c6f1f36-a32c-4ed3-993d-22fe66a9fc42.png)
 
-`sudo bash ubuntu-gdm-set-background --gradient vertical \#3338ab \#00abcd rescue`
+`sudo bash ubuntu-gdm-set-background --gradient vertical \#3338ab \#00abcd`
 
 Has discovered the gradient of the backgrounds thanks to the awesome: https://cssgradient.io/
