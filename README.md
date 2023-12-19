@@ -2,8 +2,6 @@
 
 Set Background for Ubuntu's (Gnome's GDM) login screen!
 
-Beyond eyecandy, this is useful for privacy: where your personal desktop background isn't revealed to those around who don't have your password.
-
 ----
 
 # Note:
