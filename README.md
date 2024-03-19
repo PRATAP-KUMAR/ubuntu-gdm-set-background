@@ -22,7 +22,7 @@ Set Background for Ubuntu's (Gnome's GDM) login screen!
 
 # UPDATES for Ubuntu 23.04+
 
-## for Ubuntu 23.10/Gnome 45
+## for Ubuntu 23.10/Gnome 45 and above
 
 This is highly recommonded way: https://github.com/PRATAP-KUMAR/gdm-extension - as it avoids having to recompile gresources.
 
