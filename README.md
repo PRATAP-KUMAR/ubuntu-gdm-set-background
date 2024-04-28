@@ -1,3 +1,5 @@
+# For GNOME 45 & 46 try this GDM-Extension https://github.com/PRATAP-KUMAR/gdm-extension
+
 # ubuntu-gdm-set-background
 
 Set Background for Ubuntu's (Gnome's GDM) login screen!
@@ -21,10 +23,6 @@ Set Background for Ubuntu's (Gnome's GDM) login screen!
 > 8. Verify that the greeter now shows the image `warty-final-ubuntu.png`.
 
 # UPDATES for Ubuntu 23.04+
-
-## for Ubuntu 23.10/Gnome 45 and above
-
-This is highly recommonded way: https://github.com/PRATAP-KUMAR/gdm-extension - as it avoids having to recompile gresources.
 
 ## for Ubuntu 23.04+
 
