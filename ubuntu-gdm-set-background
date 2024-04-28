@@ -20,7 +20,7 @@ RCol='\e[0m'  # Kept color names as requested
 codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
 osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
-if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
+if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|noble)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
   bash src/pre-23.sh "$@"  # Changed to use double quotes for consistency
 fi
 
@@ -33,7 +33,7 @@ if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|lunar|mantic)$ && $osn
 else
   echo -e "${Red}
 ------------------------------------------------------------------
-Sorry, Script is only for Ubuntu ${BWhi}20.04, 21.04, 21.10, 22.04, 22.10, 23.04 & 23.10${Red} Only
+Sorry, Script is only for Ubuntu ${BWhi}20.04, 21.04, 21.10, 22.04, 22.10, 23.04 & 23.10 & 24.04${Red} Only
 Exiting...
 ------------------------------------------------------------------
 ${RCol}"
