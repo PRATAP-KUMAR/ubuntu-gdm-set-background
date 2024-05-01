@@ -20,15 +20,15 @@ RCol='\e[0m'  # Kept color names as requested
 codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
 osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
-if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|noble)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
+if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
   bash src/pre-23.sh "$@"  # Changed to use double quotes for consistency
 fi
 
-if [[ "$codename" =~ ^(lunar|mantic)$ && $osname == \"Ubuntu\" ]]; then
+if [[ "$codename" =~ ^(lunar|mantic|noble)$ && $osname == \"Ubuntu\" ]]; then
   bash src/post-23.sh "$@"  # Changed to use double quotes for consistency
 fi
 
-if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|lunar|mantic)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
+if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|lunar|mantic|noble)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
 : #no-op cmd, thanks to https://stackoverflow.com/a/17583599
 else
   echo -e "${Red}
