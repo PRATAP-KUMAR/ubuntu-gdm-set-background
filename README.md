@@ -1,4 +1,4 @@
-# GNOME 45 and above try this GDM-Extension https://github.com/PRATAP-KUMAR/gdm-extension
+# GNOME 45 and above please dont use this script, instead try this GDM-Extension https://github.com/PRATAP-KUMAR/gdm-extension
 
 # ubuntu-gdm-set-background
 
