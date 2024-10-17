@@ -1,13 +1,6 @@
-# GNOME 45 and above please dont use this script, instead try this GDM-Extension https://github.com/PRATAP-KUMAR/gdm-extension
+### GNOME 45 and above please dont use this script, instead try this GDM-Extension https://github.com/PRATAP-KUMAR/gdm-extension
 
-# ubuntu-gdm-set-background
-
-Set Background for Ubuntu's (Gnome's GDM) login screen!
-
-----
-
-# Note:
-## Before running this script, first please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536. If you are not satisfied with the result then only go for the script.
+### GNOME 44 and below, Before running this script, first please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536.
 
 > [Test Case]
 >
@@ -22,16 +15,14 @@ Set Background for Ubuntu's (Gnome's GDM) login screen!
 > 7. Logout
 > 8. Verify that the greeter now shows the image `warty-final-ubuntu.png`.
 
-# UPDATES for Ubuntu 23.04+
-
-## for Ubuntu 23.04+
+### UPDATE for Ubuntu 23.04
 
 1. `ubuntu-gdm-set-background` -> has four options just like the previous versions: Image, Color, Gradient Horizontal, Gradient Vertical.
-2. `ubuntu-gdm-set-background-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way for 23.04+.
+2. `ubuntu-gdm-set-background-transparent` -> sets the login-background color transparent so that the background set via `gsettings set com.ubuntu.login-screen background-picture-uri` is visible. This is the **RECOMMENDED** way for 23.04.
 
 Please follow this link for setting login background via `gsettings`: https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1929536
 
-# `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 22.04, 22.10, 23.04, 23.10 GDM Background) HELP
+### `ubuntu-gdm-set-background` script (for changing Ubuntu 20.04, 21.04, 22.04, 23.04 GDM Background) HELP
 
 <!--Download the script with one of these commands:
 
@@ -39,7 +30,8 @@ Please follow this link for setting login background via `gsettings`: https://bu
 $ wget -q https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
 $ curl -fL 'https://raw.githubusercontent.com/PRATAP-KUMAR/ubuntu-gdm-set-background/main/ubuntu-gdm-set-background' -o ubuntu-gdm-set-background && chmod +x ubuntu-gdm-set-background
 ```-->
-## Installation
+
+### Installation
 1. clone the repo `git clone https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background.git`
 2. `cd ubuntu-gdm-set-background` 
 3. `bash ubuntu-gdm-set-background --help` or `bash ubuntu-gdm-set-background-transparent --help`
