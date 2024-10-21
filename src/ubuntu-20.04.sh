@@ -13,12 +13,8 @@ RCol='\e[0m'
 codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
 osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
-if [ "$codename" == "focal" ] || [ "$codename" == "hirsute" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
+if [ "$codename" == "focal" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
   GDM_RESOURCE_CONFIG_NAME="gdm3"
-
-elif [ "$codename" == "impish" ] || [ "$codename" == "jammy" ] || [ "$codename" == "kinetic" ] && [[ "$osname" =~ \"?Ubuntu\"? ]]; then
-  GDM_RESOURCE_CONFIG_NAME="gdm"
-
 else
   echo -e "${Red}
 ------------------------------------------------------------------

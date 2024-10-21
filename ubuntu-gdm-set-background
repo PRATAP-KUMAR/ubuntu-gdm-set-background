@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#Cursor GPT prompt:
-#Please do any improvement you find fit.
-#
-#Please comment (#) in the end what was changed and why it is better.
-#
-#Please don't change the color names.
-
 # Colors
 Red='\e[0;31m'  # Kept color names as requested
 BRed='\e[1;31m'  # Kept color names as requested
@@ -20,16 +13,9 @@ RCol='\e[0m'  # Kept color names as requested
 codename="$(grep UBUNTU_CODENAME /etc/os-release | cut -d = -f 2)"
 osname="$(grep -E '="?Ubuntu"?$' /etc/os-release | cut -d = -f 2)"
 
-if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
-  bash src/pre-23.sh "$@"  # Changed to use double quotes for consistency
-fi
-
-if [[ "$codename" =~ ^(lunar|mantic|noble)$ && $osname == \"Ubuntu\" ]]; then
-  bash src/post-23.sh "$@"  # Changed to use double quotes for consistency
-fi
-
-if [[ "$codename" =~ ^(focal|hirsute|impish|jammy|kinetic|lunar|mantic|noble)$ && $osname == \"Ubuntu\" ]]; then  # Changed the condition for better readability
-: #no-op cmd, thanks to https://stackoverflow.com/a/17583599
+if [[ "$codename" == "focal" && $osname == \"Ubuntu\" ]]
+then
+  bash src/ubuntu-20.04.sh "$@"  # Changed to use double quotes for consistency
 else
   echo -e "${Red}
 ------------------------------------------------------------------
