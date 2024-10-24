@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 set -e
 
 # Colors
@@ -35,41 +35,45 @@ Installing dependency ${BGre}'libglib2.0-dev-bin'${Red}...
   sudo apt-get install libglib2.0-dev-bin
 fi
 
-source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
 dest="/usr/local/share/gnome-shell/custom-gdm"
 color='#456789'
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
+
 ###################################################
 HELP() {
 
   echo -e "
-${BGre}ubuntu-gdm-set-background${BGre} script (for changing Ubuntu ${BWhi}20.04, 21.04, 21.10 & 22.04${RCol} GDM Background) HELP
+${BGre}ubuntu-gdm-set-background${BGre} script (for changing Ubuntu 20.04 GDM Background) -- HELP ${RCol}
 
 there are four options
-1. background with image
-2. background with color
-3. background with gradient horizontal ( requires two valid hex color inputs)
-4. background with gradient vertical ( requires two valid hex color inputs)
+1. background with color
+2. background with image
+3. background with gradient horizontal (requires two valid hex color inputs)
+4. background with gradient vertical (requires two valid hex color inputs)
 
-${BWhi}Tip:${RCol} be ready with valid hex color code in place of below example like #aAbBcC or #dDeEfF. Change them to your preffered hex color codes.
+${BGre}Tip: be ready with valid hex color code in place of below example like #aAbBcC or #dDeEfF.
+Change them to your preffered hex color codes.
 you may choose colors from ${BBlu}https://www.color-hex.com/${RCol}
 
-Example Commands:
+General Commands:
+${BBlu}
+1. ./ubuntu-gdm-set-background.sh --help
+2. sudo ./ubuntu-gdm-set-background.sh --reset${RCol}
 
-1. ${BWhi}sudo ./ubuntu-gdm-set-background.sh --image ${BGre}/home/user/backgrounds/image.jpg${RCol}
-2. ${BWhi}sudo ./ubuntu-gdm-set-background.sh --color \#aAbBcC${RCol}
-3. ${BWhi}sudo ./ubuntu-gdm-set-background.sh --gradient horizontal \#aAbBcC \#dDeEfF${RCol}
-4. ${BWhi}sudo ./ubuntu-gdm-set-background.sh --gradient vertical \#aAbBcC \#dDeEfF${RCol}
-5. ${BWhi}sudo ./ubuntu-gdm-set-background.sh --reset${RCol}
-6. ./ubuntu-gdm-set-background --help
+Example Commands:
+${BGre}
+1. sudo ./ubuntu-gdm-set-background.sh --source yaru --color \#aAbBcC
+2. sudo ./ubuntu-gdm-set-background.sh --source vanilla --image /home/user/backgrounds/image.jpg
+3. sudo ./ubuntu-gdm-set-background.sh --source yaru --gradient horizontal \#aAbBcC \#dDeEfF
+4. sudo ./ubuntu-gdm-set-background.sh --source vanilla --gradient vertical \#aAbBcC \#dDeEfF${RCol}
 
 RESCUE_MODE, Example Commands:
-
-1. ${BWhi}$ sudo ./ubuntu-gdm-set-background.sh --image ${BGre}/home/user/backgrounds/image.jpg ${BWhi}rescue${RCol}
-2. ${BWhi}$ sudo ./ubuntu-gdm-set-background.sh --color \#aAbBcC rescue${RCol}
-3. ${BWhi}$ sudo ./ubuntu-gdm-set-background.sh --gradient horizontal \#aAbBcC \#dDeEfF rescue${RCol}
-4. ${BWhi}$ sudo ./ubuntu-gdm-set-background.sh --gradient vertical \#aAbBcC \#dDeEfF rescue${RCol}
+${BBlu}
+1. sudo ./ubuntu-gdm-set-background.sh --source yaru --color \#aAbBcC rescue
+2. sudo ./ubuntu-gdm-set-background.sh --source vanilla --image /home/user/backgrounds/image.jpg rescue
+3. sudo ./ubuntu-gdm-set-background.sh --source yaru --gradient horizontal \#aAbBcC \#dDeEfF rescue
+4. sudo ./ubuntu-gdm-set-background.sh --source vanilla --gradient vertical \#aAbBcC \#dDeEfF rescue${RCol}
 
 ${BWhi}Why RESCUE_MODE?${RCol}
 It is when you try to change the background with some other scripts and then interacted with this script,
@@ -170,45 +174,71 @@ case "$1" in
 No need, Already Reset. ${Red}(or unlikely background is not set using this Script.)${RCol}
 -----------------------------------------------------------------------------"
     exit 0
-  elif [ "$UID" != "0" ]; then
-    echo -e "${BRed}This Script must be run with sudo${RCol}"
-    exit 1
   else
+    if [ -z $(gresource list "$dest/custom-gdm-background.gresource" | grep "yaru.css") ];then
+      css_source="/usr/share/gnome-shell/gnome-shell-theme.gresource"
+    else
+      css_source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+    fi
     rm "$dest/custom-gdm-background.gresource"
-    update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" "$source"
+    update-alternatives --quiet --set "$GDM_RESOURCE_CONFIG_NAME-theme.gresource" $css_source
     #! Run in subshell so outside pwd not changed
     (cd /usr/local/share/ && rmdir --ignore-fail-on-non-empty -p gnome-shell/custom-gdm)
     echo -e "${Gre}
-      		---------------
+      				---------------
 		  		|Reset Success|
 		  		---------------
 		  		Changes will be effective after a Reboot ${RCol}"
     exit 0
   fi
   ;;
+--source)
+  if [ "$2" == "yaru" ]; then
+    source="/usr/share/gnome-shell/theme/Yaru/gnome-shell-theme.gresource"
+    source_css="yaru"
+  elif [ "$2" == "vanilla" ]; then
+    source="/usr/share/gnome-shell/gnome-shell-theme.gresource"
+    source_css="vanilla"
+  else
+    echo "Please specify source 'yaru' or 'vanilla' for the --source option"
+    exit 1
+  fi
+  if [ -z "$3" ];then
+    echo -e "Please specify option --color | --image | --gradient\n or run './ubuntu-gdm-set-background --help' for help"
+    exit 1
+  fi
+  ;;
+*)
+  echo -e "\nYou have not followed the example commands.\nPlease go through the exmaple commands below"
+  HELP
+esac
+############################################################################################
+
+############################################################################################
+case "$3" in
 --image)
-  if [ -z "$2" ]; then
+  if [ -z "$4" ]; then
     echo -e "${BRed}Image path is not provided${RCol}"
     exit 1
   fi
 
   if
-    image_path="$(realpath -- "$2")" && file "$image_path" | grep -qE 'image|bitmap'
+    image_path="$(realpath -- "$4")" && file "$image_path" | grep -qE 'image|bitmap'
   then
     ROUTINE_CHECK
-    if [ "$3" == "rescue" ]; then
+    if [ "$5" == "rescue" ]; then
       RESCUE_MODE
     fi
     EXTRACT
 
     cp "$image_path" "$tmp_dir/theme/gdm-background"
-    mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
-    echo '@import url("resource:///org/gnome/shell/theme/original.css");
+    mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/$source_css.css"
+    echo '@import url("resource:///org/gnome/shell/theme/'$source_css'.css");
 #lockDialogGroup {
 background: '"$color"' url("resource:///org/gnome/shell/theme/gdm-background");
 background-repeat: no-repeat;
 background-size: cover;
-background-position: center; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
+background-position: center; }' > "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
     CREATE_XML
     glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
     mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
@@ -221,34 +251,34 @@ background-position: center; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
     echo -e "${BRed}
 Absolute path to image is neither provided nor is it valid.
 see help with below command${BWhi}
-$ ./ubuntu-gdm-set-background --help${RCol}"
+$ ./ubuntu-gdm-set-background.sh --help${RCol}"
     exit 1
   fi
   ;;
 --color)
-  if [ -z "$2" ]; then
+  if [ -z "$4" ]; then
     echo -e "${Red}Color is not provided.
-      Use ${BWhi}\$ sudo ./ubuntu-gdm-set-background.sh --color #aee02a${RCol} to set ${BWhi}#aee02a${RCol} as the background color.${RCol}"
+      Use ${BWhi}sudo ./ubuntu-gdm-set-background.sh --color \\#aee02a${BBlu} to set #aee02a as the background color.${RCol}"
     exit 1
   fi
-  if ! [[ "$2" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
+  if ! [[ "$4" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
     echo -e "${BRed}Provided color is not a valid 'HEX Color Code'${RCol}
 See help with below command
-${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
+${BWhi}./ubuntu-gdm-set-background.sh --help${RCol}"
     exit 1
   fi
 
   ROUTINE_CHECK
-  if [ "$3" == 'rescue' ]; then
+  if [ "$5" == 'rescue' ]; then
     RESCUE_MODE
   fi
 
   EXTRACT
 
-  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
-  echo '@import url("resource:///org/gnome/shell/theme/original.css");
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/$source_css.css"
+  echo '@import url("resource:///org/gnome/shell/theme/'$source_css'.css");
 #lockDialogGroup {
-background-color: '"$2"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
+background-color: '"$4"'; }' > "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
 
   glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
@@ -259,21 +289,21 @@ background-color: '"$2"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   exit 0
   ;;
 --gradient)
-  if [ "$2" == "horizontal" ] || [ "$2" == "vertical" ]; then
-    direction="$2"
+  if [ "$4" == "horizontal" ] || [ "$4" == "vertical" ]; then
+    direction="$4"
   else
     echo -e "${BRed}Gradient direction is not provided.${RCol}
-    Use ${BWhi}$ sudo ./ubuntu-gdm-set-background.sh --gradient horizontal \#aa03af \#afa0ee${RCol} OR
-    ${BWhi}$ sudo ./ubuntu-gdm-set-background.sh --gradient vertical \#aa03af \#afa0ee${RCol} to set a vertical gradient.
-    See ${BWhi}./ubuntu-gdm-set-background --help for more info${RCol}"
+    Use ${BWhi}sudo ./ubuntu-gdm-set-background.sh --gradient horizontal \#aa03af \#afa0ee${RCol} OR
+    ${BWhi}sudo ./ubuntu-gdm-set-background.sh --gradient vertical \#aa03af \#afa0ee${RCol} to set a vertical gradient.
+    See ${BWhi}./ubuntu-gdm-set-background.sh --help for more info${RCol}"
     exit 1
   fi
-  if [[ -z "$3" || -z "$4" ]]; then
+  if [[ -z "$5" || -z "$6" ]]; then
     echo -e "${BRed}color/colors is/are not provided${RCol}"
     exit 1
   fi
 
-  if ! [[ "$3" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]] || ! [[ "$4" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
+  if ! [[ "$5" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]] || ! [[ "$6" =~ ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$ ]]; then
     echo -e "${BRed}Provided color/colors is/are not a valid 'HEX Color Code'${RCol}.
 See help with below command
 ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
@@ -282,17 +312,17 @@ ${BWhi}$ ./ubuntu-gdm-set-background --help${RCol}"
 
   ROUTINE_CHECK
 
-  if [ "$5" == "rescue" ]; then
+  if [ "$7" == "rescue" ]; then
     RESCUE_MODE
   fi
 
   EXTRACT
-  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/original.css"
-  echo '@import url("resource:///org/gnome/shell/theme/original.css");
+  mv "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css" "$tmp_dir/theme/$source_css.css"
+  echo '@import url("resource:///org/gnome/shell/theme/'$source_css'.css");
 #lockDialogGroup {
 background-gradient-direction: '"$direction"';
-background-gradient-start: '"$3"';
-background-gradient-end: '"$4"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
+background-gradient-start: '"$5"';
+background-gradient-end: '"$6"'; }' > "$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.css"
   CREATE_XML
   glib-compile-resources --sourcedir "$tmp_dir/theme" "$tmp_dir/theme/custom-gdm-background.gresource.xml"
   mv "$tmp_dir/theme/custom-gdm-background.gresource" "$dest"
@@ -301,8 +331,5 @@ background-gradient-end: '"$4"'; }' >"$tmp_dir/theme/$GDM_RESOURCE_CONFIG_NAME.c
 
   exit 0
   ;;
-*)
-  echo -e "Use the options ${BWhi}--image |--color | --gradient | --help | --reset${RCol}"
-  exit 1
-  ;;
 esac
+############################################################################################
