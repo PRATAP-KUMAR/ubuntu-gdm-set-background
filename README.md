@@ -1,10 +1,6 @@
+### Note:
+This script is **only** for Ubuntu **20.04**  
 For Ubuntu 22.04 and above, support migrated to [gdm-extension](https://github.com/PRATAP-KUMAR/gdm-extension).
-
-For Ubuntu 20.04, you can use this `ubuntu-gdm-set-badckground.sh` script.
-
-What is `--source` option in below commands?  
-It will use either `yaru` or `vanilla` theme and then customize the background of GDM Login screen.  
-You must specify which one to use `yaru || vanilla`
 
 ### Installation
 ```
@@ -13,10 +9,14 @@ cd ubuntu-gdm-set-background
 ./ubuntu-gdm-set-background.sh --help
 ```
 
+What is `--source` option in below commands?  
+It will use either `yaru` or `vanilla` theme and then customize the background of GDM Login screen.  
+You must specify which one to use `yaru || vanilla`
+
 ### Example Commands:
 ```
 sudo ./ubuntu-gdm-set-background.sh --source yaru --color \#aAbBcC
-sudo ./ubuntu-gdm-set-background.sh --source vanilla --image /home/user/backgrounds/image.jpg
+sudo ./ubuntu-gdm-set-background.sh --source vanilla --image /usr/share/backgrounds/gnome/Fabric.jpg
 sudo ./ubuntu-gdm-set-background.sh --source yaru --gradient horizontal \#aAbBcC \#dDeEfF
 sudo ./ubuntu-gdm-set-background.sh --source vanilla --gradient vertical \#aAbBcC \#dDeEfF
 ```
@@ -24,7 +24,7 @@ sudo ./ubuntu-gdm-set-background.sh --source vanilla --gradient vertical \#aAbBc
 ### Rescue mode, Example Commands:
 ```
 sudo ./ubuntu-gdm-set-background.sh --source yaru --color \#aAbBcC rescue
-sudo ./ubuntu-gdm-set-background.sh --source vanilla --image /home/user/backgrounds/image.jpg rescue
+sudo ./ubuntu-gdm-set-background.sh --source vanilla --image /usr/share/backgrounds/gnome/Fabric.jpg rescue
 sudo ./ubuntu-gdm-set-background.sh --source yaru --gradient horizontal \#aAbBcC \#dDeEfF rescue
 sudo ./ubuntu-gdm-set-background.sh --source vanilla --gradient vertical \#aAbBcC \#dDeEfF rescue
 ```
