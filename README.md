@@ -36,9 +36,11 @@ found conflicts? then add 'rescue' to the end of the command as mentiond above.
 
 Please note that for 'Rescue mode' active internet connection is necessary.
 
+### Reset
 At anytime you want to reset to where you were before discovering this script
 ```
 sudo ./ubuntu-gdm-set-background.sh --reset
 ```
 
-If you found any issues please raise an issue with this github repository.
+### Issues
+If you find any issues please raise an issue with this github repository.
