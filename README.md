@@ -43,4 +43,4 @@ sudo ./ubuntu-gdm-set-background.sh --reset
 ```
 
 ### Issues
-If you find any issues please raise an issue with this github repository.
+If you find any issues please raise [here](https://github.com/PRATAP-KUMAR/ubuntu-gdm-set-background/issues)
